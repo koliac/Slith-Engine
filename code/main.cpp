@@ -1,7 +1,9 @@
+#define TINYOBJLOADER_IMPLEMENTATION
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
 #include <iostream>
+#include "tiny_obj_loader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -32,6 +34,9 @@ int main()
 		glfwTerminate();
 		return -1;
 	}
+	else {
+		std::cout << "GLFW window initialization completed successfully" << std::endl;
+	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
@@ -42,6 +47,14 @@ int main()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+	// -----------------------------------For test only ---------------------------------------
+
+
+
+	// ----------------------------------------------------------------------------------------
+
+	// Open GL global configuration
+	glEnable(GL_DEPTH_TEST);
 
 	// render loop
 	// -----------
