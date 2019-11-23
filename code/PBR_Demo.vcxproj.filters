@@ -49,5 +49,11 @@
     <None Include="shaders\Phong.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\skybox.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\skybox.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
