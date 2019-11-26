@@ -1,9 +1,11 @@
 #include "Mesh.h"
+#include <iostream>
 namespace WSYEngine {
 	Mesh::Mesh(const std::vector<WSYEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer) :
 		m_vertexBuffer(vertexBuffer), m_triangleBuffer(triangleBuffer)
 	{
 		BindMesh();
+		std::cout << "Generating mesh " << m_VAO << std::endl;
 	}
 
 	GLuint Mesh::getMeshID() const

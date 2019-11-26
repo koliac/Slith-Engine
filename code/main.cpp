@@ -1,18 +1,19 @@
-#define TINYOBJLOADER_IMPLEMENTATION
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
-#include "Vertex.h"
-#include "Mesh.h"
-#include <tiny_obj_loader.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+#include "Vertex.h"
+#include "Mesh.h"
 #include "Shader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
-
+void processMesh(const aiScene *scene, const aiNode *root, std::vector<WSYEngine::Mesh> &meshList);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -67,6 +68,9 @@ int main()
 
 	// ------------------------Global OpenGL Config-----------------------------------------------------
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+	glFrontFace(GL_CCW);
 
 
 	// -----------------------Shader Setup-------------------------------------------------------------
@@ -76,58 +80,23 @@ int main()
 	// ------------------------------------------------------------------------------------------
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
 
-	std::string inputfile = "../Models/BlenderMonkey.obj";
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
-
-	std::string err;
-
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, inputfile.c_str());
-
-	if (!err.empty()) {
-		std::cerr << err << std::endl;
+	std::string modelPath = "../models/BlenderMonkey.obj";
+	Assimp::Importer importer;
+	const aiScene *scene = importer.ReadFile(modelPath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+		return 1;
 	}
 
-	if (!ret) {
-		exit(1);
+	std::vector<WSYEngine::Mesh> meshList;
+	processMesh(scene, scene->mRootNode, meshList);
+	for (size_t i = 0; i < meshList.size(); i++)
+	{
+		std::cout << "Mesh ID "<<i<<" is "<<meshList[i].getMeshID()<<std::endl;
 	}
-	std::vector<GLuint> triangleList;
-	std::vector<WSYEngine::Vertex> vertexlist;
-	size_t index_offset = 0;
-	for (size_t f = 0; f < shapes[0].mesh.num_face_vertices.size(); f++) {
-		int fv = shapes[0].mesh.num_face_vertices[f];
-
-		// Loop over vertices in the face.
-		for (size_t v = 0; v < fv; v++) {
-			// access to vertex
-			tinyobj::index_t idx = shapes[0].mesh.indices[index_offset + v];
-			tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
-			tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
-			tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
-			tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
-			tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
-			tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
-			tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
-			tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];
-
-			vertexlist.push_back(WSYEngine::Vertex(
-				glm::vec3(vx, vy, vz),
-				glm::vec3(nx, ny, nz),
-				glm::vec2(tx, ty),
-				glm::vec3(0.0f),
-				glm::uvec4(1.0f)
-			));
-			triangleList.push_back(index_offset + v);
-		
-
-		}
-		index_offset += fv;
-
-		// per-face material
-		shapes[0].mesh.material_ids[f];
-	}
-	WSYEngine::Mesh blenderMonkey(vertexlist, triangleList);
+	
+	//WSYEngine::Mesh blenderMonkey(vertexlist, triangleList);
 	// ----------------------------Matrix Setup--------------------------------------------------
 	 // projection matrix
 	testShader.bind();
@@ -158,12 +127,18 @@ int main()
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 1.0f, 0.0f));
 		testShader.setMat4("view", view);
+		for (size_t i = 0; i < meshList.size(); i++)
+		{
+			glBindVertexArray(meshList[i].getMeshID());
+			glDrawElements(GL_TRIANGLES, meshList[i].getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
+		}
 
+	
 		//these two calls were used to render the quad for testing purpose
 		//glBindVertexArray(VAO); // 
-		glBindVertexArray(blenderMonkey.getMeshID());
+		//glBindVertexArray(blenderMonkey.getMeshID());
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
+		//glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		// glBindVertexArray(0); // no need to unbind it every time 
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -193,4 +168,100 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	// make sure the viewport matches the new window dimensions; note that width and 
 	// height will be significantly larger than specified on retina displays.
 	glViewport(0, 0, width, height);
+}
+
+void processMesh(const aiScene *scene, const aiNode *root, std::vector<WSYEngine::Mesh> &meshList) {
+
+	for (size_t i = 0; i < root->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[root->mMeshes[i]];
+		std::vector<WSYEngine::Vertex> vList;
+		std::vector<GLuint> triList;
+		for (size_t v = 0; v < mesh->mNumVertices; v++)
+		{
+			WSYEngine::Vertex vertex;
+			glm::vec3 position, normal, tangent;
+			glm::vec2 uv;
+			glm::vec4 vColor;
+			if (mesh->HasPositions()) {
+				position = { mesh->mVertices[v].x,  
+					mesh->mVertices[v].y, 
+					mesh->mVertices[v].z };
+			}
+			else {
+				position = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex position" << std::endl;
+			}
+			if (mesh->HasNormals()) {
+				normal = {
+				mesh->mNormals[v].x,
+				mesh->mNormals[v].y,
+				mesh->mNormals[v].z
+				};
+			}
+			else {
+				normal = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex normal" << std::endl;
+			}
+			if (mesh->HasTangentsAndBitangents()) {
+				tangent = {
+				mesh->mTangents[v].x,
+				mesh->mTangents[v].y,
+				mesh->mTangents[v].z
+				};
+			}
+			else {
+				tangent = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex tangent" << std::endl;
+			}
+			if (mesh->HasTextureCoords(0)) {
+				uv = {
+				mesh->mTextureCoords[0][v].x,
+				mesh->mTextureCoords[0][v].y
+				};
+			}
+			else {
+				uv = { 0.0f,0.0f };
+				std::cout << "Mesh does not have texture coordinate" << std::endl;
+			}
+			if (mesh->HasVertexColors(0)) {
+				vColor = {
+				mesh->mColors[0][v].r,
+				mesh->mColors[0][v].g,
+				mesh->mColors[0][v].b,
+				mesh->mColors[0][v].a
+				};
+			}
+			else {
+				vColor = { 1.0f,1.0f,1.0f,1.0f };
+				//std::cout << "Mesh does not have a vertex color" << std::endl;
+			}
+			vertex.position = position;
+			vertex.normal = normal;
+			vertex.texcoord = uv;
+			vertex.tangent = tangent;
+			vertex.color = vColor;
+
+			vList.push_back(vertex);
+			
+		}
+
+
+		for (unsigned int f = 0; f < mesh->mNumFaces; f++)
+		{
+			aiFace face = mesh->mFaces[f];
+			for (unsigned int fIndex = 0; fIndex < face.mNumIndices; fIndex++) {
+				triList.push_back(face.mIndices[fIndex]);
+			}
+				
+		}
+		std::cout << "Mesh " << meshList.size() << " vertex count: " << vList.size() << std::endl;
+		std::cout << "Mesh " << meshList.size() << " triangle count: " << triList.size() << std::endl;
+		meshList.push_back(WSYEngine::Mesh(vList, triList));
+		
+	}
+	for (size_t n = 0; n < root->mNumChildren; n++)
+	{
+		processMesh(scene, root->mChildren[n], meshList);
+	}
 }
