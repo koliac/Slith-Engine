@@ -157,25 +157,25 @@ int main()
 
 	// ------------------------------------------------------------------------------------------
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
-	std::string inputfile = "../Models/StandfordBunny.obj";
-	WSYEngine::Model blenderMonkeyHead(inputfile);
+	std::string inputfile = "../Models/drakefire_pistol_low.obj";
+	WSYEngine::Model testMesh(inputfile);
 
-	std::string texturePath = "../textures/hand-painted-cliff.jpg";
-	std::string texturePath2 = "../textures/hand-painted-grass.jpg";
-	WSYEngine::Texture testTexture(texturePath);
-	WSYEngine::Texture testTexture2(texturePath2);
+	std::string diffuseTexture = "../textures/base_albedo.jpg";
+	std::string normalTexture = "../textures/base_normal.jpg";
+	WSYEngine::Texture testTexture(diffuseTexture);
+	WSYEngine::Texture testTexture2(normalTexture);
 
 	// ----------------------------Matrix Setup--------------------------------------------------   
 	 // projection matrix
 	testShader.bind();
-	testShader.setInt("diffuse1", 0);
-	testShader.setInt("diffuse2", 1);
+	testShader.setInt("diffuse", 0);
+	testShader.setInt("normal", 1);
 	testShader.setMat4("model", glm::mat4(1.0f));
 	glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	testShader.setMat4("projection", projection);
 	testShader.unbind();
 	// ------------------------------------------------------------------------------------------
-	std::vector<WSYEngine::Mesh*> meshes = blenderMonkeyHead.getMeshList();
+	std::vector<WSYEngine::Mesh*> meshes = testMesh.getMeshList();
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -194,7 +194,7 @@ int main()
 		testShader.bind();
 		
 		// view matrix
-		glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()) * 10, 0.0f, cos(glfwGetTime()) * 10),
+		glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()*0.2f) * 5, 0.0f, cos(glfwGetTime()*0.2f) * 5),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 1.0f, 0.0f));
 		testShader.setMat4("view", view);
