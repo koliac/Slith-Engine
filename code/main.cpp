@@ -162,14 +162,17 @@ int main()
 
 	std::string diffuseTexture = "../textures/base_albedo.jpg";
 	std::string normalTexture = "../textures/base_normal.jpg";
+	std::string roughnessTexture = "../textures/base_roughness.jpg";
 	WSYEngine::Texture testTexture(diffuseTexture);
 	WSYEngine::Texture testTexture2(normalTexture);
+	WSYEngine::Texture testTexture3(roughnessTexture);
 
 	// ----------------------------Matrix Setup--------------------------------------------------   
 	 // projection matrix
 	testShader.bind();
 	testShader.setInt("diffuse", 0);
 	testShader.setInt("normal", 1);
+	testShader.setInt("roughness", 2);
 	testShader.setMat4("model", glm::mat4(1.0f));
 	glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	testShader.setMat4("projection", projection);
@@ -211,6 +214,8 @@ int main()
 			glBindTexture(GL_TEXTURE_2D, testTexture.getTextureID());
 			glActiveTexture(GL_TEXTURE1);
 			glBindTexture(GL_TEXTURE_2D, testTexture2.getTextureID());
+			glActiveTexture(GL_TEXTURE2);
+			glBindTexture(GL_TEXTURE_2D, testTexture3.getTextureID());
 			glBindVertexArray(meshes[m]->getMeshID());
 			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		}

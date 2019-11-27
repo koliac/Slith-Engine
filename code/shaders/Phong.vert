@@ -8,18 +8,19 @@
  uniform mat4 view;
  uniform mat4 projection;
 
- out vec4 worldNormal;
-
+ out vec3 worldNormal;
+ out vec3 worldTangent;
+ out vec3 worldBitangent;
  out vec2 uv;
- out vec3 modelTangent;
- out vec3 modelNormal;
+
 
  void main()
  {
-    worldNormal = model*vec4(aNormal,0.0);
+    worldNormal = vec3(normalize(model*vec4(aNormal,0.0)));
+    worldTangent = vec3(normalize(model*vec4(aTangent,0.0)));
+    worldTangent = normalize(worldTangent - dot(worldTangent, worldNormal)*worldNormal);
+    worldBitangent = cross(worldNormal, worldTangent);
     uv = aUV;
-    modelNormal = aNormal;
-    modelTangent = aTangent;
     gl_Position = projection * view  * model* vec4(aPos, 1.0f);
     
 
