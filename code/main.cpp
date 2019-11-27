@@ -11,6 +11,8 @@
 #include "Vertex.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include "Texture.h"
+#include "Model.h"
 
 
 #include <tiny_obj_loader.h>
@@ -155,68 +157,25 @@ int main()
 
 	// ------------------------------------------------------------------------------------------
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
+	std::string inputfile = "../Models/StandfordBunny.obj";
+	WSYEngine::Model blenderMonkeyHead(inputfile);
 
-	std::string inputfile = "../Models/BlenderMonkey.obj";
-	tinyobj::attrib_t attrib;
-	std::vector<tinyobj::shape_t> shapes;
-	std::vector<tinyobj::material_t> materials;
+	std::string texturePath = "../textures/hand-painted-cliff.jpg";
+	std::string texturePath2 = "../textures/hand-painted-grass.jpg";
+	WSYEngine::Texture testTexture(texturePath);
+	WSYEngine::Texture testTexture2(texturePath2);
 
-	std::string err;
-
-	bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, inputfile.c_str());
-
-	if (!err.empty()) {
-		std::cerr << err << std::endl;
-	}
-
-	if (!ret) {
-		exit(1);
-	}
-	std::vector<GLuint> triangleList;
-	std::vector<WSYEngine::Vertex> vertexlist;
-	size_t index_offset = 0;
-	for (size_t f = 0; f < shapes[0].mesh.num_face_vertices.size(); f++) {
-		int fv = shapes[0].mesh.num_face_vertices[f];
-
-		// Loop over vertices in the face.
-		for (size_t v = 0; v < fv; v++) {
-			// access to vertex
-			tinyobj::index_t idx = shapes[0].mesh.indices[index_offset + v];
-			tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
-			tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
-			tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
-			tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
-			tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
-			tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
-			tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
-			tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];
-
-			vertexlist.push_back(WSYEngine::Vertex(
-				glm::vec3(vx, vy, vz),
-				glm::vec3(nx, ny, nz),
-				glm::vec2(tx, ty),
-				glm::vec3(0.0f),
-				glm::uvec4(1.0f)
-			));
-			triangleList.push_back(index_offset + v);
-		
-
-		}
-		index_offset += fv;
-
-		// per-face material
-		shapes[0].mesh.material_ids[f];
-	}
-	WSYEngine::Mesh blenderMonkey(vertexlist, triangleList);
-	// ----------------------------Matrix Setup--------------------------------------------------
+	// ----------------------------Matrix Setup--------------------------------------------------   
 	 // projection matrix
 	testShader.bind();
+	testShader.setInt("diffuse1", 0);
+	testShader.setInt("diffuse2", 1);
 	testShader.setMat4("model", glm::mat4(1.0f));
 	glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	testShader.setMat4("projection", projection);
 	testShader.unbind();
 	// ------------------------------------------------------------------------------------------
-
+	std::vector<WSYEngine::Mesh*> meshes = blenderMonkeyHead.getMeshList();
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -233,6 +192,7 @@ int main()
 		// draw our first triangle
 		//glUseProgram(shaderProgram);
 		testShader.bind();
+		
 		// view matrix
 		glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()) * 10, 0.0f, cos(glfwGetTime()) * 10),
 			glm::vec3(0.0f, 0.0f, 0.0f),
@@ -241,11 +201,19 @@ int main()
 
 		//these two calls were used to render the quad for testing purpose
 		//glBindVertexArray(VAO); // 
-		glBindVertexArray(blenderMonkey.getMeshID());
+		//glBindVertexArray(blenderMonkey.getMeshID());
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
-		// glBindVertexArray(0); // no need to unbind it every time 
-
+		//glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
+		//glBindVertexArray(0); // no need to unbind it every time 
+		for (unsigned m = 0; m < meshes.size(); m++)
+		{
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, testTexture.getTextureID());
+			glActiveTexture(GL_TEXTURE1);
+			glBindTexture(GL_TEXTURE_2D, testTexture2.getTextureID());
+			glBindVertexArray(meshes[m]->getMeshID());
+			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
+		}
 		// draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.bind();
