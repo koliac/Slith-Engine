@@ -12,5 +12,7 @@ namespace WSYEngine{
 		position(p), normal(n), texcoord(uv), tangent(t), color(c) 
 		{
 		}
+		Vertex() {
+		}
 	};
 }

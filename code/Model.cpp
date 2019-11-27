@@ -3,81 +3,114 @@
 #include <iostream>
 
 namespace WSYEngine {
+	void Model::processMesh(const aiScene *scene, const aiNode *root, std::vector<WSYEngine::Mesh*> &meshList) {
 
-	Model::Model(std::string modelPathString)
+	for (size_t i = 0; i < root->mNumMeshes; i++)
 	{
-	
-		tinyobj::attrib_t attrib;
-		std::vector<tinyobj::shape_t> shapes;
-		std::vector<tinyobj::material_t> materials;
-
-		std::string err;
-
-		bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, modelPathString.c_str());
-
-		if (!err.empty()) {
-			std::cerr << err << std::endl;
-		}
-
-		if (!ret) {
-			std::cout << "Fail to load mesh: " << modelPathString << std::endl;
-		}
-		m_MeshList = std::vector<Mesh*>();
-		// Loop over shapes
-		for (size_t s = 0; s < shapes.size(); s++) {
-			std::vector<GLuint> triangleList;
-			std::vector<WSYEngine::Vertex> vertexlist;
-			size_t index_offset = 0;
-			for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
-				int fv = shapes[s].mesh.num_face_vertices[f];
-
-				// Loop over vertices in the face.
-				for (size_t v = 0; v < fv; v++) {
-					// access to vertex
-					tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-					tinyobj::real_t vx, vy, vz, nx, ny, nz, tx, ty;
-					if (attrib.vertices.size()>0) {
-						vx = attrib.vertices[3 * idx.vertex_index + 0];
-						vy = attrib.vertices[3 * idx.vertex_index + 1];
-						vz = attrib.vertices[3 * idx.vertex_index + 2];
-					}
-					else {
-						vx = vy = vz = 0.0f;
-					}
-					if (attrib.normals.size()>0) {
-						nx = attrib.normals[3 * idx.normal_index + 0];
-						ny = attrib.normals[3 * idx.normal_index + 1];
-						nz = attrib.normals[3 * idx.normal_index + 2];
-					}
-					else {
-						nx = ny = nz = 0.0f;
-					}
-					if (attrib.texcoords.size()>0) {
-						tx = attrib.texcoords[2 * idx.texcoord_index + 0];
-						ty = attrib.texcoords[2 * idx.texcoord_index + 1];
-					}
-					else {
-						tx = ty = 0.0f;
-					}
-					vertexlist.push_back(WSYEngine::Vertex(
-						glm::vec3(vx, vy, vz),
-						glm::vec3(nx, ny, nz),
-						glm::vec2(tx, ty),
-						glm::vec3(0.0f),
-						glm::uvec4(1.0f)
-					));
-					triangleList.push_back(index_offset + v);
-
-
-				}
-				index_offset += fv;
-
-				// per-face material
-				shapes[s].mesh.material_ids[f];
+		aiMesh* mesh = scene->mMeshes[root->mMeshes[i]];
+		std::vector<WSYEngine::Vertex> vList;
+		std::vector<GLuint> triList;
+		for (size_t v = 0; v < mesh->mNumVertices; v++)
+		{
+			WSYEngine::Vertex vertex;
+			glm::vec3 position, normal, tangent;
+			glm::vec2 uv;
+			glm::vec4 vColor;
+			if (mesh->HasPositions()) {
+				position = { mesh->mVertices[v].x,  
+					mesh->mVertices[v].y, 
+					mesh->mVertices[v].z };
 			}
-			WSYEngine::Mesh* m = new WSYEngine::Mesh(vertexlist, triangleList);
-			m_MeshList.push_back(m);
+			else {
+				position = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex position" << std::endl;
+			}
+			if (mesh->HasNormals()) {
+				normal = {
+				mesh->mNormals[v].x,
+				mesh->mNormals[v].y,
+				mesh->mNormals[v].z
+				};
+			}
+			else {
+				normal = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex normal" << std::endl;
+			}
+			if (mesh->HasTangentsAndBitangents()) {
+				tangent = {
+				mesh->mTangents[v].x,
+				mesh->mTangents[v].y,
+				mesh->mTangents[v].z
+				};
+			}
+			else {
+				tangent = { 0.0f,0.0f,0.0f };
+				std::cout << "Mesh does not have a vertex tangent" << std::endl;
+			}
+			if (mesh->HasTextureCoords(0)) {
+				uv = {
+				mesh->mTextureCoords[0][v].x,
+				mesh->mTextureCoords[0][v].y
+				};
+			}
+			else {
+				uv = { 0.0f,0.0f };
+				std::cout << "Mesh does not have texture coordinate" << std::endl;
+			}
+			if (mesh->HasVertexColors(0)) {
+				vColor = {
+				mesh->mColors[0][v].r,
+				mesh->mColors[0][v].g,
+				mesh->mColors[0][v].b,
+				mesh->mColors[0][v].a
+				};
+			}
+			else {
+				vColor = { 1.0f,1.0f,1.0f,1.0f };
+				//std::cout << "Mesh does not have a vertex color" << std::endl;
+			}
+			vertex.position = position;
+			vertex.normal = normal;
+			vertex.texcoord = uv;
+			vertex.tangent = tangent;
+			vertex.color = vColor;
+
+			vList.push_back(vertex);
+			
 		}
+
+
+		for (unsigned int f = 0; f < mesh->mNumFaces; f++)
+		{
+			aiFace face = mesh->mFaces[f];
+			for (unsigned int fIndex = 0; fIndex < face.mNumIndices; fIndex++) {
+				triList.push_back(face.mIndices[fIndex]);
+			}
+				
+		}
+		std::cout << "Mesh " << meshList.size() << " vertex count: " << vList.size() << std::endl;
+		std::cout << "Mesh " << meshList.size() << " triangle count: " << triList.size() << std::endl;
+		WSYEngine::Mesh* m = new WSYEngine::Mesh(vList, triList);
+		meshList.push_back(m);
+		
+	}
+	for (size_t n = 0; n < root->mNumChildren; n++)
+	{
+		processMesh(scene, root->mChildren[n], meshList);
+	}
+}
+	Model::Model(std::string modelPathString):m_MeshList(std::vector<Mesh*>())
+	{
+		Assimp::Importer importer;
+		const aiScene *scene = importer.ReadFile(modelPathString, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenSmoothNormals | aiProcess_CalcTangentSpace);
+		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+		{
+			std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
+			
+		}
+
+		processMesh(scene, scene->mRootNode, m_MeshList);
+	
 	}
 
 	std::vector<Mesh*> Model::getMeshList() const
