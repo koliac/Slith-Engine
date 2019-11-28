@@ -103,6 +103,7 @@ namespace WSYEngine {
 		return m_PropertyStringMap[name];
 	}
 
+
 	void Shader::setBool(const std::string &name, GLboolean value)
 	{
 		glUniform1i(getCachedPropertyHash(name), (GLint)value);

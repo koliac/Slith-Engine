@@ -13,6 +13,8 @@ namespace WSYEngine {
 		GLuint m_ID;
 		std::unordered_map<std::string, GLint> m_PropertyStringMap;
 		GLuint getCachedPropertyHash(const std::string &name);
+
+		
 	public:
 		Shader(const std::string &vertShaderPath, const std::string &fragShaderPath);
 		~Shader();

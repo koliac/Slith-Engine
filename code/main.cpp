@@ -1,4 +1,3 @@
-#define TINYOBJLOADER_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <glad/glad.h>
@@ -13,9 +12,9 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Model.h"
+#include "Time.h"
+#include "Camera.h"
 
-
-#include <tiny_obj_loader.h>
 #include <stb_image.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -29,6 +28,9 @@ unsigned int loadCubemap(std::vector<std::string> faces);
 // settings
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+
+float deltaTime = 0.0f;
+float lastFrameTime = 0.0f;
 
 //const char *vertexShaderSource = "#version 330 core\n"
 //"layout (location = 0) in vec3 aPos;\n"
@@ -81,7 +83,8 @@ int main()
 	// ------------------------Global OpenGL Config-----------------------------------------------------
 	glEnable(GL_DEPTH_TEST);
 
-
+	// -----------------------Camera Setup ------------------------------------------------------------
+	WSYEngine::Camera cam(window);
 	// -----------------------Shader Setup-------------------------------------------------------------
 	WSYEngine::Shader testShader("Shaders/Phong.vert", "Shaders/Phong.frag");
 	WSYEngine::Shader skyboxShader("Shaders/skybox.vert", "Shaders/skybox.frag");
@@ -151,6 +154,17 @@ int main()
 		"resources/textures/skybox/DaylightBox/DaylightBox_Back.bmp"
 	};
 
+	//std::vector<std::string> faces = {
+	//	"../textures/skybox/yellow_cloud/yellowcloud_ft.jpg",
+	//	"../textures/skybox/yellow_cloud/yellowcloud_bk.jpg",
+	//	"../textures/skybox/yellow_cloud/yellowcloud_dn.jpg",
+	//	"../textures/skybox/yellow_cloud/yellowcloud_up.jpg",
+	//	"../textures/skybox/yellow_cloud/yellowcloud_lf.jpg",
+	//	"../textures/skybox/yellow_cloud/yellowcloud_rt.jpg"
+	//
+	//	
+	//};
+
 	unsigned int cubemapTexture = loadCubemap(faces);
 
 	skyboxShader.setInt("skybox", 0);
@@ -168,21 +182,39 @@ int main()
 	WSYEngine::Texture testTexture3(roughnessTexture);
 
 	// ----------------------------Matrix Setup--------------------------------------------------   
+	// view matrix
+	glm::mat4 view = glm::lookAt(
+		glm::vec3(0.0f, 0.0f, 5.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
+
+
 	 // projection matrix
 	testShader.bind();
+	testShader.setMat4("view", view);
 	testShader.setInt("diffuse", 0);
 	testShader.setInt("normal", 1);
 	testShader.setInt("roughness", 2);
-	testShader.setMat4("model", glm::mat4(1.0f));
-	glm::mat4 projection = glm::perspective(45.0f, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	testShader.setMat4("projection", projection);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model,90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+	testShader.setMat4("model", model);
+	//glm::mat4 projection = glm::perspective(glm::radians(100.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	
 	testShader.unbind();
 	// ------------------------------------------------------------------------------------------
 	std::vector<WSYEngine::Mesh*> meshes = testMesh.getMeshList();
 	// render loop
 	// -----------
+	
 	while (!glfwWindowShouldClose(window))
 	{
+		// main-loop time logic
+		WSYEngine::Time::time = glfwGetTime();
+		WSYEngine::Time::deltaTime = WSYEngine::Time::time - lastFrameTime;
+		lastFrameTime = WSYEngine::Time::time;
+
+
 		// input
 		// -----
 		processInput(window);
@@ -191,17 +223,13 @@ int main()
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		cam.orbitControl();
+		glm::mat4 projection = cam.getPerspectiveMatrix();
 		// draw our first triangle
 		//glUseProgram(shaderProgram);
 		testShader.bind();
+		testShader.setMat4("projection", projection);
 		
-		// view matrix
-		glm::mat4 view = glm::lookAt(glm::vec3(sin(glfwGetTime()*0.2f) * 5, 0.0f, cos(glfwGetTime()*0.2f) * 5),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f));
-		testShader.setMat4("view", view);
-
 		//these two calls were used to render the quad for testing purpose
 		//glBindVertexArray(VAO); // 
 		//glBindVertexArray(blenderMonkey.getMeshID());
@@ -223,7 +251,7 @@ int main()
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.bind();
 		//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
-		skyboxShader.setMat4("view", view);
+		skyboxShader.setMat4("view", skyBoxView);
 		skyboxShader.setMat4("projection", projection);
 		// skybox cube
 		glBindVertexArray(skyboxVAO);
