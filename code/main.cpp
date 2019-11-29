@@ -68,7 +68,8 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	// glad: load all OpenGL function pointers
 	// ---------------------------------------
@@ -181,18 +182,9 @@ int main()
 	WSYEngine::Texture testTexture2(normalTexture);
 	WSYEngine::Texture testTexture3(roughnessTexture);
 
-	// ----------------------------Matrix Setup--------------------------------------------------   
-	// view matrix
-	glm::mat4 view = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, 5.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
+	// ----------------------------Shader setting--------------------------------------------------   
 
-
-	 // projection matrix
 	testShader.bind();
-	testShader.setMat4("view", view);
 	testShader.setInt("diffuse", 0);
 	testShader.setInt("normal", 1);
 	testShader.setInt("roughness", 2);
@@ -224,12 +216,16 @@ int main()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		cam.orbitControl();
+
+		// ----------------------------Matrix Setup--------------------------------------------------   
+		glm::mat4 view = cam.getViewMatrix();
+		glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
 		glm::mat4 projection = cam.getPerspectiveMatrix();
 		// draw our first triangle
 		//glUseProgram(shaderProgram);
 		testShader.bind();
 		testShader.setMat4("projection", projection);
-		
+		testShader.setMat4("view", view);
 		//these two calls were used to render the quad for testing purpose
 		//glBindVertexArray(VAO); // 
 		//glBindVertexArray(blenderMonkey.getMeshID());

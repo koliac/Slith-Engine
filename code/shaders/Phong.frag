@@ -38,12 +38,12 @@ void main()
    float NdotH = dot(viewN, viewH);
 
     float specular = 1.0 - texture(roughness, uv).r;
-   float specularIntensity =  pow( clamp( NdotH,0.0,1.0 ), 128 )*specular;
+   float specularIntensity =  pow( clamp( NdotH,0.0,1.0 ), 64 )*specular;
 
 
    vec4 d = texture(diffuse,uv);
   
    //vec4 d = vec4(0.8,0.8,0.8,1.0);
-   FragColor = d*NdotL + vec4(1.0,1.0,1.0,1.0)*specularIntensity;
+   FragColor = (0.2*vec4(135.0/255.0,206.0/255.0,235.0/255.0,1.0))+d*NdotL + vec4(1.0,1.0,1.0,1.0)*specularIntensity;
    //FragColor = specular;
 }
