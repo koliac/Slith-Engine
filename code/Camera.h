@@ -53,6 +53,8 @@ namespace WSYEngine {
 		glm::mat4 getPerspectiveMatrix() const;
 		glm::mat4 getViewMatrix() const;
 		void orbitControl();
+
+		glm::vec3 getPosition() const;
 	};
 }
 

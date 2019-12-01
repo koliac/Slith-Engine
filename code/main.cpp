@@ -89,6 +89,7 @@ int main()
 	// -----------------------Shader Setup-------------------------------------------------------------
 	WSYEngine::Shader testShader("Shaders/Phong.vert", "Shaders/Phong.frag");
 	WSYEngine::Shader skyboxShader("Shaders/skybox.vert", "Shaders/skybox.frag");
+	WSYEngine::Shader pbrShader("Shaders/PBR.vert", "Shaders/PBR.frag");
 
 	// --------------------------- Skybox--------------------------------------------------------
 	float skyboxVertices[] = {
@@ -147,12 +148,12 @@ int main()
 
 	std::vector<std::string> faces =
 	{
-		"resources/textures/skybox/DaylightBox/DaylightBox_Right.bmp",
-		"resources/textures/skybox/DaylightBox/DaylightBox_Left.bmp",
-		"resources/textures/skybox/DaylightBox/DaylightBox_Top.bmp",
-		"resources/textures/skybox/DaylightBox/DaylightBox_Bottom.bmp",
-		"resources/textures/skybox/DaylightBox/DaylightBox_Front.bmp",
-		"resources/textures/skybox/DaylightBox/DaylightBox_Back.bmp"
+		"../textures/skybox/DaylightBox/DaylightBox_Right.bmp",
+		"../textures/skybox/DaylightBox/DaylightBox_Left.bmp",
+		"../textures/skybox/DaylightBox/DaylightBox_Top.bmp",
+		"../textures/skybox/DaylightBox/DaylightBox_Bottom.bmp",
+		"../textures/skybox/DaylightBox/DaylightBox_Front.bmp",
+		"../textures/skybox/DaylightBox/DaylightBox_Back.bmp"
 	};
 
 	//std::vector<std::string> faces = {
@@ -178,9 +179,30 @@ int main()
 	std::string diffuseTexture = "../textures/base_albedo.jpg";
 	std::string normalTexture = "../textures/base_normal.jpg";
 	std::string roughnessTexture = "../textures/base_roughness.jpg";
+	std::string aoTexture = "../textures/base_AO.jpg";
+	std::string metallicTexture = "../textures/base_metallic.jpg";
 	WSYEngine::Texture testTexture(diffuseTexture);
 	WSYEngine::Texture testTexture2(normalTexture);
 	WSYEngine::Texture testTexture3(roughnessTexture);
+	WSYEngine::Texture testTexture4(aoTexture);
+	WSYEngine::Texture testTexture5(metallicTexture);
+
+	// ----------------------------Light ----------------------------------------------------------
+	// (no light directions were specified, set it to whatever you like)
+	// vec3[4]
+	glm::vec3 lightPositions[4] = {
+		{0, 0, 0},
+		{-10, -10, -10},
+		{10, 10, 10},
+		{0, -10, 0}
+	};
+	glm::vec3 lightColors[4] = {
+		{1.0, 1.0, 1.0},
+		{1.0, 0, 0},
+		{0, 1.0, 0},
+		{0, 0, 1.0}
+	};
+	//float lightDirections[12] = {};
 
 	// ----------------------------Shader setting--------------------------------------------------   
 
@@ -194,6 +216,31 @@ int main()
 	//glm::mat4 projection = glm::perspective(glm::radians(100.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	
 	testShader.unbind();
+
+	pbrShader.bind();
+	pbrShader.setMat4("model", model);
+
+	pbrShader.setInt("albedoMap", 0);
+	pbrShader.setInt("normalMap", 1);
+	pbrShader.setInt("roughnessMap", 2);
+	pbrShader.setInt("aoMap", 3);
+	pbrShader.setInt("metallicMap", 4);
+
+	pbrShader.setVec3("lightPositions[0]", lightPositions[0]);
+	pbrShader.setVec3("lightPositions[1]", lightPositions[1]);
+	pbrShader.setVec3("lightPositions[2]", lightPositions[2]);
+	pbrShader.setVec3("lightPositions[3]", lightPositions[3]);
+
+	pbrShader.setVec3("lightColors[0]", lightColors[0]);
+	pbrShader.setVec3("lightColors[1]", lightColors[1]);
+	pbrShader.setVec3("lightColors[2]", lightColors[2]);
+	pbrShader.setVec3("lightColors[3]", lightColors[3]);
+
+	pbrShader.setVec3("camPos", cam.getPosition());
+	//pbrShader.setVec3("camPos", glm::vec3(0.0, 0.0, 0.0));
+
+	pbrShader.unbind();
+	
 	// ------------------------------------------------------------------------------------------
 	std::vector<WSYEngine::Mesh*> meshes = testMesh.getMeshList();
 	// render loop
@@ -223,27 +270,45 @@ int main()
 		glm::mat4 projection = cam.getPerspectiveMatrix();
 		// draw our first triangle
 		//glUseProgram(shaderProgram);
-		testShader.bind();
-		testShader.setMat4("projection", projection);
-		testShader.setMat4("view", view);
+		
+		// ----------------Phong 
+		//testShader.bind();
+		//testShader.setMat4("projection", projection);
+		//testShader.setMat4("view", view);
+
+		// ----------------PBR
+		pbrShader.bind();
+		pbrShader.setMat4("projection", projection);
+		pbrShader.setMat4("view", view);
+
 		//these two calls were used to render the quad for testing purpose
 		//glBindVertexArray(VAO); // 
 		//glBindVertexArray(blenderMonkey.getMeshID());
 		//glDrawArrays(GL_TRIANGLES, 0, 6);
 		//glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0); // no need to unbind it every time 
+		//glBindVertexArray(0); // no need to unbind it every tim
+
+		// -------------draw the mesh
 		for (unsigned m = 0; m < meshes.size(); m++)
 		{
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, testTexture.getTextureID());
+			glBindTexture(GL_TEXTURE_2D, testTexture.getTextureID()); // diffuse
 			glActiveTexture(GL_TEXTURE1);
-			glBindTexture(GL_TEXTURE_2D, testTexture2.getTextureID());
+			glBindTexture(GL_TEXTURE_2D, testTexture2.getTextureID()); // normal
 			glActiveTexture(GL_TEXTURE2);
-			glBindTexture(GL_TEXTURE_2D, testTexture3.getTextureID());
+			glBindTexture(GL_TEXTURE_2D, testTexture3.getTextureID()); // roughness
+			
+			glActiveTexture(GL_TEXTURE3);
+			glBindTexture(GL_TEXTURE_2D, testTexture4.getTextureID()); // ao
+			glActiveTexture(GL_TEXTURE4);
+			glBindTexture(GL_TEXTURE_2D, testTexture5.getTextureID()); // metallic
+			
+
 			glBindVertexArray(meshes[m]->getMeshID());
 			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		}
-		// draw skybox as last
+
+		// --------------draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.bind();
 		//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix

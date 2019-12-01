@@ -24,6 +24,7 @@ namespace WSYEngine {
 		void setInt(const std::string &name, GLint value);
 		void setFloat(const std::string &name, GLfloat value);
 		void setMat4(const std::string &name, const glm::mat4 &mat);
+		void setVec3(const std::string & name, const glm::vec3 & vec3);
 	};
 
 }

@@ -124,5 +124,9 @@ namespace WSYEngine {
 	{
 		glUniformMatrix4fv(getCachedPropertyHash(name), 1, GL_FALSE, &(mat[0][0]));
 	}
+	void Shader::setVec3(const std::string & name, const glm::vec3 & vec3)
+	{
+		glUniform3fv(getCachedPropertyHash(name), 1, &vec3[0]);
+	}
 }
 

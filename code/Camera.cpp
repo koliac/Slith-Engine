@@ -82,6 +82,11 @@ namespace WSYEngine {
 		processScroll();
 		processMouseInput();
 	}
+	glm::vec3 Camera::getPosition() const
+	{
+		return m_CameraPosition;
+	}
+
 	Camera::Camera(GLFWwindow* contex,
 		const glm::vec3 &cameraPosition,
 		const glm::vec3 &lookAtPoint,
