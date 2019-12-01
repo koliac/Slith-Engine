@@ -149,6 +149,8 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\HDRToneMapping.frag" />
+    <None Include="shaders\HDRToneMapping.vert" />
     <None Include="shaders\PBR.frag" />
     <None Include="shaders\PBR.vert" />
     <None Include="shaders\skybox.frag" />

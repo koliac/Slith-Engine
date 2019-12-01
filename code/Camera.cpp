@@ -84,7 +84,10 @@ namespace WSYEngine {
 	}
 	glm::vec3 Camera::getPosition() const
 	{
-		return m_CameraPosition;
+		return 	glm::vec3(
+			glm::cos(glm::radians(m_yaw))*glm::cos(glm::radians(m_pitch))*5.0f,
+			glm::sin(glm::radians(m_pitch))*5.0f,
+			glm::sin(glm::radians(m_yaw))*glm::cos(glm::radians(m_pitch))*5.0f);
 	}
 
 	Camera::Camera(GLFWwindow* contex,

@@ -88,6 +88,12 @@
     <None Include="shaders\PBR.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\HDRToneMapping.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\HDRToneMapping.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PBR_Demo.rc">

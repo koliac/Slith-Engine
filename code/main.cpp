@@ -22,6 +22,7 @@
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void genQuad(unsigned int* quadVAO, unsigned int* quadVBO );
 
 unsigned int loadCubemap(std::vector<std::string> faces);
 
@@ -31,6 +32,8 @@ const unsigned int SCR_HEIGHT = 600;
 
 float deltaTime = 0.0f;
 float lastFrameTime = 0.0f;
+
+unsigned int quadVAO=0, quadVBO=0;
 
 //const char *vertexShaderSource = "#version 330 core\n"
 //"layout (location = 0) in vec3 aPos;\n"
@@ -87,9 +90,10 @@ int main()
 	// -----------------------Camera Setup ------------------------------------------------------------
 	WSYEngine::Camera cam(window);
 	// -----------------------Shader Setup-------------------------------------------------------------
-	WSYEngine::Shader testShader("Shaders/Phong.vert", "Shaders/Phong.frag");
+	WSYEngine::Shader phongShader("Shaders/Phong.vert", "Shaders/Phong.frag");
 	WSYEngine::Shader skyboxShader("Shaders/skybox.vert", "Shaders/skybox.frag");
 	WSYEngine::Shader pbrShader("Shaders/PBR.vert", "Shaders/PBR.frag");
+	WSYEngine::Shader toneMappingShader("Shaders/HDRToneMapping.vert", "Shaders/HDRToneMapping.frag");
 
 	// --------------------------- Skybox--------------------------------------------------------
 	float skyboxVertices[] = {
@@ -156,22 +160,17 @@ int main()
 		"../textures/skybox/DaylightBox/DaylightBox_Back.bmp"
 	};
 
-	//std::vector<std::string> faces = {
-	//	"../textures/skybox/yellow_cloud/yellowcloud_ft.jpg",
-	//	"../textures/skybox/yellow_cloud/yellowcloud_bk.jpg",
-	//	"../textures/skybox/yellow_cloud/yellowcloud_dn.jpg",
-	//	"../textures/skybox/yellow_cloud/yellowcloud_up.jpg",
-	//	"../textures/skybox/yellow_cloud/yellowcloud_lf.jpg",
-	//	"../textures/skybox/yellow_cloud/yellowcloud_rt.jpg"
-	//
-	//	
-	//};
-
 	unsigned int cubemapTexture = loadCubemap(faces);
 
 	skyboxShader.setInt("skybox", 0);
 
-	// ------------------------------------------------------------------------------------------
+	// -----------------------------------------Full Screen Render Quad----------------------------------
+
+	genQuad(&quadVAO, &quadVBO);
+	toneMappingShader.bind();
+	toneMappingShader.setInt("hdrBuffer", 0);
+	toneMappingShader.unbind();
+
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
 	std::string inputfile = "../Models/drakefire_pistol_low.obj";
 	WSYEngine::Model testMesh(inputfile);
@@ -187,37 +186,65 @@ int main()
 	WSYEngine::Texture testTexture4(aoTexture);
 	WSYEngine::Texture testTexture5(metallicTexture);
 
+
+
+	
+  // ------------configure render buffer------------------------
+	unsigned int hdrFBO;
+	glGenFramebuffers(1, &hdrFBO);
+	// create floating point color buffer
+	unsigned int colorBuffer;
+	glGenTextures(1, &colorBuffer);
+	glBindTexture(GL_TEXTURE_2D, colorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGBA, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	// create depth buffer (renderbuffer)
+	unsigned int rboDepth;
+	glGenRenderbuffers(1, &rboDepth);
+	glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, SCR_WIDTH, SCR_HEIGHT);
+	// attach buffers
+	glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuffer, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "Framebuffer not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 	// ----------------------------Light ----------------------------------------------------------
 	// (no light directions were specified, set it to whatever you like)
 	// vec3[4]
 	glm::vec3 lightPositions[4] = {
-		{0, 0, 0},
-		{-10, -10, -10},
-		{10, 10, 10},
-		{0, -10, 0}
+		{0, 10, 0},
+		{-5, 0, 0},
+		{5, 5, 0},
+		{0, -5, 0}
 	};
 	glm::vec3 lightColors[4] = {
-		{1.0, 1.0, 1.0},
-		{1.0, 0, 0},
-		{0, 1.0, 0},
-		{0, 0, 1.0}
+		{50.0f,40.0f,40.0f},
+		{40.0f,50.0f,600.0f},
+		{200.0f,50.0f,50.0f},
+		{50.0f,50.0f,50.0f}
 	};
 	//float lightDirections[12] = {};
 
 	// ----------------------------Shader setting--------------------------------------------------   
 
-	testShader.bind();
-	testShader.setInt("diffuse", 0);
-	testShader.setInt("normal", 1);
-	testShader.setInt("roughness", 2);
+	phongShader.bind();
+
+	phongShader.setInt("diffuse", 0);
+	phongShader.setInt("normal", 1);
+	phongShader.setInt("roughness", 2);
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model,90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-	testShader.setMat4("model", model);
-	//glm::mat4 projection = glm::perspective(glm::radians(100.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	phongShader.setMat4("model", model);
 	
-	testShader.unbind();
+	phongShader.unbind();
 
 	pbrShader.bind();
+
 	pbrShader.setMat4("model", model);
 
 	pbrShader.setInt("albedoMap", 0);
@@ -236,8 +263,7 @@ int main()
 	pbrShader.setVec3("lightColors[2]", lightColors[2]);
 	pbrShader.setVec3("lightColors[3]", lightColors[3]);
 
-	pbrShader.setVec3("camPos", cam.getPosition());
-	//pbrShader.setVec3("camPos", glm::vec3(0.0, 0.0, 0.0));
+
 
 	pbrShader.unbind();
 	
@@ -257,13 +283,15 @@ int main()
 		// input
 		// -----
 		processInput(window);
-
+		cam.orbitControl();
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		cam.orbitControl();
-
+	
+		// main pass
+		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// ----------------------------Matrix Setup--------------------------------------------------   
 		glm::mat4 view = cam.getViewMatrix();
 		glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
@@ -280,13 +308,7 @@ int main()
 		pbrShader.bind();
 		pbrShader.setMat4("projection", projection);
 		pbrShader.setMat4("view", view);
-
-		//these two calls were used to render the quad for testing purpose
-		//glBindVertexArray(VAO); // 
-		//glBindVertexArray(blenderMonkey.getMeshID());
-		//glDrawArrays(GL_TRIANGLES, 0, 6);
-		//glDrawElements(GL_TRIANGLES, blenderMonkey.getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
-		//glBindVertexArray(0); // no need to unbind it every tim
+		pbrShader.setVec3("camPos", cam.getPosition());
 
 		// -------------draw the mesh
 		for (unsigned m = 0; m < meshes.size(); m++)
@@ -307,13 +329,14 @@ int main()
 			glBindVertexArray(meshes[m]->getMeshID());
 			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		}
-
+		pbrShader.unbind();
+		glBindVertexArray(0);
 		// --------------draw skybox as last
 		glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
 		skyboxShader.bind();
-		//view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
 		skyboxShader.setMat4("view", skyBoxView);
 		skyboxShader.setMat4("projection", projection);
+		
 		// skybox cube
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
@@ -321,12 +344,27 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS); // set depth function back to default
+		skyboxShader.unbind();
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		//----------------------------------------- Full Screen Quad Render
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		toneMappingShader.bind();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D,colorBuffer);
+		glBindVertexArray(quadVAO);
+		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+		glBindVertexArray(0);
+		toneMappingShader.unbind();
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	glDeleteBuffers(1, &quadVBO);
+	glDeleteVertexArrays(1, &quadVAO);
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------
@@ -383,4 +421,26 @@ unsigned int loadCubemap(std::vector<std::string> faces)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	return textureID;
+}
+
+void genQuad(unsigned int* quadVAO, unsigned int* quadVBO) {
+
+	float quadVertices[] = {
+		// positions        // texture Coords
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+		 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+	};
+	// setup plane VAO
+	glGenVertexArrays(1, quadVAO);
+	glGenBuffers(1, quadVBO);
+	glBindVertexArray(*quadVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, *quadVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
