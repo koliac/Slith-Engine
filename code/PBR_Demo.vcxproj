@@ -149,10 +149,20 @@
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\background.frag" />
+    <None Include="shaders\background.vert" />
+    <None Include="shaders\brdf.frag" />
+    <None Include="shaders\brdf.vert" />
+    <None Include="shaders\cubemap.vert" />
+    <None Include="shaders\equirectangular_to_cubemap.frag" />
     <None Include="shaders\HDRToneMapping.frag" />
     <None Include="shaders\HDRToneMapping.vert" />
+    <None Include="shaders\irradiance_convolution.frag" />
     <None Include="shaders\PBR.frag" />
     <None Include="shaders\PBR.vert" />
+    <None Include="shaders\pbr_ibl.frag" />
+    <None Include="shaders\pbr_ibl.vert" />
+    <None Include="shaders\prefilter.frag" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
     <None Include="shaders\Phong.frag" />

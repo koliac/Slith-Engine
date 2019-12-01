@@ -4,9 +4,9 @@
 #include<iostream>
 namespace WSYEngine {
 	
-	Texture::Texture(std::string &texturePath)
+	Texture::Texture(std::string &texturePath, bool isHDR)
 	{
-		setupTexture(texturePath);
+		setupTexture(texturePath,isHDR);
 	}
 	Texture::~Texture()
 	{
@@ -18,7 +18,7 @@ namespace WSYEngine {
 	{
 		return m_textureID;
 	}
-	void Texture::setupTexture(const std::string &texturePath )
+	void Texture::setupTexture(const std::string &texturePath, bool isHDR)
 	{
 		glGenTextures(1, &m_textureID);
 		glBindTexture(GL_TEXTURE_2D, m_textureID);
@@ -34,6 +34,8 @@ namespace WSYEngine {
 		{
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
+			
+		
 			std::cout << "Load texture " << m_textureID << " succeeded." << std::endl;
 		}
 		else

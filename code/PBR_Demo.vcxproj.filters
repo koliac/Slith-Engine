@@ -94,6 +94,36 @@
     <None Include="shaders\HDRToneMapping.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="shaders\brdf.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\cubemap.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\equirectangular_to_cubemap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\irradiance_convolution.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\pbr_ibl.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\pbr_ibl.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\prefilter.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\background.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\background.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PBR_Demo.rc">
