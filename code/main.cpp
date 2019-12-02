@@ -63,7 +63,7 @@ int main()
 
 	// glfw window creation
 	// --------------------
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "580 Final Project - PBR Renderer", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -178,21 +178,21 @@ int main()
 	toneMappingShader.unbind();
 
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
-	std::string inputfile = "../Models/drakefire_pistol_low.obj";
+	std::string inputfile = "../Models/MechModel.dae";
 	WSYEngine::Model testMesh(inputfile);
 
-	std::string diffuseTexture = "../textures/base_albedo.jpg";
-	std::string normalTexture = "../textures/base_normal.jpg";
-	std::string roughnessTexture = "../textures/base_roughness.jpg";
-	std::string aoTexture = "../textures/base_AO.jpg";
-	std::string metallicTexture = "../textures/base_metallic.jpg";
-	std::string testHDRTexturePath = "../textures/HDR/studio.hdr";
+	std::string diffuseTexture = "../textures/MechTextures/default_albedo.jpg";
+	std::string normalTexture = "../textures/MechTextures/default_normal.jpg";
+	std::string roughnessTexture = "../textures/MechTextures/default_roughness.jpg";
+	std::string aoTexture = "../textures/MechTextures/default_AO.jpg";
+	std::string metallicTexture = "../textures/MechTextures/default_metallic.jpg";
+
 	WSYEngine::Texture dTex(diffuseTexture);
 	WSYEngine::Texture nTex(normalTexture);
 	WSYEngine::Texture rTex(roughnessTexture);
 	WSYEngine::Texture aoTex(aoTexture);
 	WSYEngine::Texture mTex(metallicTexture);
-	WSYEngine::Texture testHDRTexture(testHDRTexturePath);
+
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::rotate(model, 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
