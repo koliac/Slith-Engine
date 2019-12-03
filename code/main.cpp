@@ -1,5 +1,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 
+#include "vendor/dearIMGUI/imgui.h"
+#include "vendor/dearIMGUI/imgui_impl_glfw.h"
+#include "vendor/dearIMGUI/imgui_impl_opengl3.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -14,6 +18,7 @@
 #include "Model.h"
 #include "Time.h"
 #include "Camera.h"
+#include "WSYEngineEnums.h"
 
 #include <stb_image.h>
 #include <glm/glm.hpp>
@@ -35,18 +40,11 @@ float lastFrameTime = 0.0f;
 
 unsigned int quadVAO=0, quadVBO=0;
 
-//const char *vertexShaderSource = "#version 330 core\n"
-//"layout (location = 0) in vec3 aPos;\n"
-//"void main()\n"
-//"{\n"
-//"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-//"}\0";
-//const char *fragmentShaderSource = "#version 330 core\n"
-//"out vec4 FragColor;\n"
-//"void main()\n"
-//"{\n"
-//"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-//"}\n\0";
+// ImGUI Controlled variables
+WSYEngine::ShaderMode shaderMode{ WSYEngine::ShaderMode::PBRIBL};
+WSYEngine::BackgroundMode backgroudMode{ WSYEngine::BackgroundMode::IMAGE };
+bool isHDR{ true };
+
 
 int main()
 {
@@ -82,6 +80,22 @@ int main()
 		return -1;
 	}
 
+	//------------------------ImGUI setup------------------------------------------------------
+	   // Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	//ImGui::StyleColorsClassic();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330 core");
+
 
 
 	// ------------------------Global OpenGL Config-----------------------------------------------------
@@ -101,6 +115,7 @@ int main()
 	WSYEngine::Shader prefilterShader("Shaders/cubemap.vert", "Shaders/prefilter.frag");
 	WSYEngine::Shader brdfShader("Shaders/brdf.vert", "Shaders/brdf.frag");
 	WSYEngine::Shader backgroundShader("Shaders/background.vert", "Shaders/background.frag");
+	//WSYEngine::Shader lightShader("Shaders/light.vert", "Shaders/light.frag");
 	// --------------------------- Skybox--------------------------------------------------------
 	float skyboxVertices[] = {
 		// positions          
@@ -514,6 +529,24 @@ int main()
 	glViewport(0, 0, scrWidth, scrHeight);
 	while (!glfwWindowShouldClose(window))
 	{
+
+		// ImGUI Frames
+		   // Start the Dear ImGui frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		// setup ImGUI
+		ImGui::Begin("Shader Mode");
+		ImGui::RadioButton("Phong", (int*)&shaderMode, WSYEngine::ShaderMode::PHONG); ImGui::SameLine();
+		ImGui::RadioButton("PBR IBL", (int*)&shaderMode, WSYEngine::ShaderMode::PBRIBL); ImGui::SameLine();
+		ImGui::End();
+		ImGui::Begin("Lightings");
+		ImGui::Checkbox("HDR", &isHDR);
+		ImGui::RadioButton("Image", (int*)&backgroudMode, WSYEngine::BackgroundMode::IMAGE); ImGui::SameLine();
+		ImGui::RadioButton("Light Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::LIGHTMAP); ImGui::SameLine();
+		ImGui::End();
+		// render ImGUI
+		ImGui::Render();
 		// main-loop time logic
 		WSYEngine::Time::time = glfwGetTime();
 		WSYEngine::Time::deltaTime = WSYEngine::Time::time - lastFrameTime;
@@ -528,29 +561,34 @@ int main()
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 		// main pass
-		glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+		if (isHDR) {
+			glBindFramebuffer(GL_FRAMEBUFFER, hdrFBO);
+		}
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// ----------------------------Matrix Setup--------------------------------------------------   
 		glm::mat4 view = cam.getViewMatrix();
 		glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
 		glm::mat4 projection = cam.getPerspectiveMatrix();
-		
-		// ----------------Phong 
-		//testShader.bind();
-		//testShader.setMat4("projection", projection);
-		//testShader.setMat4("view", view);
-
-		// ----------------PBR
-		//pbrShaderNoIBL.bind();
-		//pbrShaderNoIBL.setMat4("projection", projection);
-		//pbrShaderNoIBL.setMat4("view", view);
-		//pbrShaderNoIBL.setVec3("camPos", cam.getPosition());
-		pbrIBLShader.bind();
-		pbrIBLShader.setMat4("projection", projection);
-		pbrIBLShader.setMat4("view", view);
-		pbrIBLShader.setVec3("camPos", cam.getPosition());
+		if (shaderMode == WSYEngine::ShaderMode::PHONG) {
+			// ----------------Phong 
+			phongShader.bind();
+			phongShader.setMat4("projection", projection);
+			phongShader.setMat4("view", view);
+		}
+		else if (shaderMode == WSYEngine::ShaderMode::PBRIBL)
+		{
+			// ----------------PBR
+			//pbrShaderNoIBL.bind();
+			//pbrShaderNoIBL.setMat4("projection", projection);
+			//pbrShaderNoIBL.setMat4("view", view);
+			//pbrShaderNoIBL.setVec3("camPos", cam.getPosition());
+			pbrIBLShader.bind();
+			pbrIBLShader.setMat4("projection", projection);
+			pbrIBLShader.setMat4("view", view);
+			pbrIBLShader.setVec3("camPos", cam.getPosition());
+		}
 		// -------------draw the mesh
 		for (unsigned m = 0; m < meshes.size(); m++)
 		{
@@ -576,23 +614,17 @@ int main()
 			glBindVertexArray(meshes[m]->getMeshID());
 			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		}
-		/*pbrShaderNoIBL.unbind();*/
-		pbrIBLShader.unbind();
+		if (shaderMode == WSYEngine::ShaderMode::PHONG) {
+
+			phongShader.unbind();
+		}
+		else if (shaderMode == WSYEngine::ShaderMode::PBRIBL)
+		{
+			pbrIBLShader.unbind();
+		}
 		glBindVertexArray(0);
+
 		// --------------draw skybox as last
-		//glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
-		//skyboxShader.bind();
-		//skyboxShader.setMat4("view", skyBoxView);
-		//skyboxShader.setMat4("projection", projection);
-		//
-		//// skybox cube
-		//glBindVertexArray(skyboxVAO);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
-		//glBindVertexArray(0);
-		//glDepthFunc(GL_LESS); // set depth function back to default
-		//skyboxShader.unbind();
 		glDepthFunc(GL_LEQUAL);
 		backgroundShader.bind();
 
@@ -600,32 +632,44 @@ int main()
 		backgroundShader.setMat4("projection", projection);
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP,envCubemap);
+		if (backgroudMode == WSYEngine::BackgroundMode::IMAGE) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+		}
+		else if (backgroudMode == WSYEngine::BackgroundMode::LIGHTMAP) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+		}
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		backgroundShader.unbind();
 		glDepthFunc(GL_LESS);
-		
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if (isHDR) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//----------------------------------------- Full Screen Quad Render
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			//----------------------------------------- Full Screen Quad Render
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		toneMappingShader.bind();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D,colorBuffer);
-		glBindVertexArray(quadVAO);
-		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		glBindVertexArray(0);
-		toneMappingShader.unbind();
+			toneMappingShader.bind();
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, colorBuffer);
+			glBindVertexArray(quadVAO);
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			glBindVertexArray(0);
+			toneMappingShader.unbind();
+		}
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		// -------------------------------------------------------------------------------
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
 	glDeleteBuffers(1, &quadVBO);
 	glDeleteVertexArrays(1, &quadVAO);
+
+	// ImGUI terminate
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------

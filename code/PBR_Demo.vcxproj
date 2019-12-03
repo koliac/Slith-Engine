@@ -137,6 +137,12 @@
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Time.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui_demo.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui_draw.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui_impl_glfw.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="vendor\dearIMGUI\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -146,9 +152,20 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="vendor\dearIMGUI\imconfig.h" />
+    <ClInclude Include="vendor\dearIMGUI\imgui.h" />
+    <ClInclude Include="vendor\dearIMGUI\imgui_impl_glfw.h" />
+    <ClInclude Include="vendor\dearIMGUI\imgui_impl_opengl3.h" />
+    <ClInclude Include="vendor\dearIMGUI\imgui_internal.h" />
+    <ClInclude Include="vendor\dearIMGUI\imstb_rectpack.h" />
+    <ClInclude Include="vendor\dearIMGUI\imstb_textedit.h" />
+    <ClInclude Include="vendor\dearIMGUI\imstb_truetype.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="WSYEngineEnums.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="light.frag" />
+    <None Include="light.vert" />
     <None Include="shaders\background.frag" />
     <None Include="shaders\background.vert" />
     <None Include="shaders\brdf.frag" />

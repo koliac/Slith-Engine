@@ -16,6 +16,15 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{527de53f-aea7-4858-97d8-b1a1e89a9905}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DearImGui">
+      <UniqueIdentifier>{3543e76b-1320-4607-a682-2c3dfa4293d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DearImGui\source">
+      <UniqueIdentifier>{dc6a79ac-83a2-45c6-9592-1b3a203d85f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DearImGui\header">
+      <UniqueIdentifier>{3f4724fd-b4dd-43fd-b458-3c9c5b0e500b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -42,6 +51,24 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui_impl_glfw.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui_impl_opengl3.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui_demo.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui_draw.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\dearIMGUI\imgui_widgets.cpp">
+      <Filter>DearImGui\source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mesh.h">
@@ -66,6 +93,33 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imgui.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imgui_impl_opengl3.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imgui_impl_glfw.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imconfig.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imgui_internal.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imstb_rectpack.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imstb_textedit.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\dearIMGUI\imstb_truetype.h">
+      <Filter>DearImGui\header</Filter>
+    </ClInclude>
+    <ClInclude Include="WSYEngineEnums.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -122,6 +176,12 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="shaders\background.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="light.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="light.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
