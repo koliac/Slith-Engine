@@ -552,6 +552,7 @@ int main()
 		}
 		ImGui::RadioButton("Image", (int*)&backgroudMode, WSYEngine::BackgroundMode::IMAGE); ImGui::SameLine();
 		ImGui::RadioButton("Light Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::LIGHTMAP); ImGui::SameLine();
+		ImGui::RadioButton("Specular Prefiltered Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::PREFILTER); ImGui::SameLine();
 		ImGui::End();
 		// render ImGUI
 		ImGui::Render();
@@ -645,6 +646,9 @@ int main()
 		}
 		else if (backgroudMode == WSYEngine::BackgroundMode::LIGHTMAP) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
+		}
+		else if (backgroudMode == WSYEngine::BackgroundMode::PREFILTER) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
 		}
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);

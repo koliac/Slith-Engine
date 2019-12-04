@@ -33,6 +33,7 @@ namespace WSYEngine {
 			Camera::COLOR_BUFFER_TEX = 0;
 		}
 	
+		// resizing the final color buffer texture
 		glGenTextures(1, &Camera::COLOR_BUFFER_TEX);
 		glBindTexture(GL_TEXTURE_2D, Camera::COLOR_BUFFER_TEX);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
