@@ -1,7 +1,9 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 namespace WSYEngine {
 	class Camera
 	{
@@ -21,6 +23,9 @@ namespace WSYEngine {
 		float m_LastYPos;
 		float m_yaw;
 		float m_pitch;
+
+		static unsigned int COLOR_BUFFER_TEX;
+		static unsigned int FINAL_FRAME_BUFFER_OBJ;
 
 		static float SCROLL_OFFSET;
 		static float WIDTH;
@@ -53,6 +58,9 @@ namespace WSYEngine {
 		glm::mat4 getPerspectiveMatrix() const;
 		glm::mat4 getViewMatrix() const;
 		void orbitControl();
+		void setColorBufferTexture(int tex);
+		void setFinalFrameBufferObject(int fbo);
+		unsigned int getColorBufferTexture();
 
 		glm::vec3 getPosition() const;
 	};

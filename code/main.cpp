@@ -236,6 +236,9 @@ int main()
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "Framebuffer not complete!" << std::endl;
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	cam.setFinalFrameBufferObject(hdrFBO);
+	cam.setColorBufferTexture(colorBuffer);
+
 
 
 	// ----------------------------Light ----------------------------------------------------------
@@ -656,7 +659,7 @@ int main()
 			toneMappingShader.bind();
 			toneMappingShader.setInt("isACES", isACES);
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, colorBuffer);
+			glBindTexture(GL_TEXTURE_2D, cam.getColorBufferTexture());
 			glBindVertexArray(quadVAO);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 			glBindVertexArray(0);
