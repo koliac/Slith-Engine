@@ -44,6 +44,7 @@ unsigned int quadVAO=0, quadVBO=0;
 WSYEngine::ShaderMode shaderMode{ WSYEngine::ShaderMode::PBRIBL};
 WSYEngine::BackgroundMode backgroudMode{ WSYEngine::BackgroundMode::IMAGE };
 bool isHDR{ true };
+int isACES{ 1 };
 
 
 int main()
@@ -542,6 +543,10 @@ int main()
 		ImGui::End();
 		ImGui::Begin("Lightings");
 		ImGui::Checkbox("HDR", &isHDR);
+		if (isHDR) {
+			ImGui::RadioButton("ACES", &isACES, 1); ImGui::SameLine();
+			ImGui::RadioButton("Reinhard", &isACES, 0);
+		}
 		ImGui::RadioButton("Image", (int*)&backgroudMode, WSYEngine::BackgroundMode::IMAGE); ImGui::SameLine();
 		ImGui::RadioButton("Light Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::LIGHTMAP); ImGui::SameLine();
 		ImGui::End();
@@ -649,6 +654,7 @@ int main()
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 			toneMappingShader.bind();
+			toneMappingShader.setInt("isACES", isACES);
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, colorBuffer);
 			glBindVertexArray(quadVAO);
