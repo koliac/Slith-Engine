@@ -25,32 +25,34 @@ namespace WSYEngine {
 	}
 	void Camera::camera_framebuffer_size_callback(GLFWwindow * window, int width, int height)
 	{
-		Camera::WIDTH = width;
-		Camera::HEIGHT = height;
-		glViewport(0, 0, width, height);
-		if (Camera::COLOR_BUFFER_TEX != 0) {
-			glDeleteTextures(1, &Camera::COLOR_BUFFER_TEX);
-			Camera::COLOR_BUFFER_TEX = 0;
-		}
-	
-		// resizing the final color buffer texture
-		glGenTextures(1, &Camera::COLOR_BUFFER_TEX);
-		glBindTexture(GL_TEXTURE_2D, Camera::COLOR_BUFFER_TEX);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		
-		unsigned int rboDepth;
-		glGenRenderbuffers(1, &rboDepth);
-		glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width,height);
+		if (width > 0 && height > 0) {
+			Camera::WIDTH = width;
+			Camera::HEIGHT = height;
+			glViewport(0, 0, width, height);
+			if (Camera::COLOR_BUFFER_TEX != 0) {
+				glDeleteTextures(1, &Camera::COLOR_BUFFER_TEX);
+				Camera::COLOR_BUFFER_TEX = 0;
+			}
 
-		glBindFramebuffer(GL_FRAMEBUFFER,Camera::FINAL_FRAME_BUFFER_OBJ);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Camera::COLOR_BUFFER_TEX, 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
-		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-			std::cout << "Framebuffer not complete!" << std::endl;
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			// resizing the final color buffer texture
+			glGenTextures(1, &Camera::COLOR_BUFFER_TEX);
+			glBindTexture(GL_TEXTURE_2D, Camera::COLOR_BUFFER_TEX);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			unsigned int rboDepth;
+			glGenRenderbuffers(1, &rboDepth);
+			glBindRenderbuffer(GL_RENDERBUFFER, rboDepth);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, Camera::FINAL_FRAME_BUFFER_OBJ);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, Camera::COLOR_BUFFER_TEX, 0);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboDepth);
+			if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+				std::cout << "Framebuffer not complete!" << std::endl;
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 	
 	}
 	void Camera::processKeybordInput()

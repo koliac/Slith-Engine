@@ -42,9 +42,12 @@ void main()
 
         // reinhard
         vec3 reinhard = hdrColor / (hdrColor + vec3(1.0));
+        
+        // aces
         vec3 aces = aces_fitted(hdrColor);
         vec3 finalResult = isACES ==1? aces : reinhard;
-        // also gamma correct while we're at it
+        
+        // gamma correction
         finalResult = pow(finalResult, vec3(1.0 / gamma));
         FragColor = vec4(finalResult, 1.0);
         //FragColor = texture(hdrBuffer, TexCoords);
