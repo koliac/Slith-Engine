@@ -4,7 +4,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-namespace WSYEngine {
+namespace SlithEngine {
 	class Camera
 	{
 	private:

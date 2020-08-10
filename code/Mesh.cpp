@@ -1,6 +1,6 @@
 #include "Mesh.h"
-namespace WSYEngine {
-	Mesh::Mesh(const std::vector<WSYEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer) :
+namespace SlithEngine {
+	Mesh::Mesh(const std::vector<SlithEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer) :
 		m_vertexBuffer(vertexBuffer), m_triangleBuffer(triangleBuffer)
 	{
 		BindMesh();
@@ -24,7 +24,7 @@ namespace WSYEngine {
 
 	int Mesh::BindMesh()
 	{
-		using namespace WSYEngine;
+		using namespace SlithEngine;
 		m_VAO = 0, m_VBO = 0, m_EBO = 0;
 		glGenVertexArrays(1, &m_VAO);
 		glGenBuffers(1, &m_VBO);

@@ -1,6 +1,6 @@
 #include "Shader.h"
 
-namespace WSYEngine {
+namespace SlithEngine {
 	Shader::Shader(const std::string &vertShaderPath, const std::string &fragShaderPath) :
 		m_PropertyStringMap(std::unordered_map<std::string, GLint>())
 	{

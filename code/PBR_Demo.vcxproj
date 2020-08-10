@@ -161,7 +161,7 @@
     <ClInclude Include="vendor\dearIMGUI\imstb_textedit.h" />
     <ClInclude Include="vendor\dearIMGUI\imstb_truetype.h" />
     <ClInclude Include="Vertex.h" />
-    <ClInclude Include="WSYEngineEnums.h" />
+    <ClInclude Include="SlithEngineEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="light.frag" />

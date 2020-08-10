@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 #include "Time.h"
-namespace WSYEngine {
+namespace SlithEngine {
 	float Camera::SCROLL_OFFSET = 0.0f;
 	bool Camera::NEED_UPDATE = false;
 	float Camera::WIDTH = 800.0f;
@@ -143,7 +143,7 @@ namespace WSYEngine {
 
 	void Camera::printTime() const {
 
-		std::cout << "Current Time: " << WSYEngine::Time::time << std::endl;
+		std::cout << "Current Time: " << SlithEngine::Time::time << std::endl;
 	}
 	glm::mat4 Camera::getPerspectiveMatrix() const
 	{

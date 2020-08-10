@@ -5,12 +5,12 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-namespace WSYEngine {
+namespace SlithEngine {
 	class Model
 	{
 	private:
 		std::vector<Mesh*> m_MeshList;
-		void processMesh(const aiScene *scene, const aiNode *root, std::vector<WSYEngine::Mesh*> &meshList);
+		void processMesh(const aiScene *scene, const aiNode *root, std::vector<SlithEngine::Mesh*> &meshList);
 	public:
 		std::vector<Mesh*> getMeshList() const;
 		Model(std::string modelPathString);

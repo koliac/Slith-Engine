@@ -2,7 +2,7 @@
 #include <vector>
 #include <glad/glad.h> 
 #include "vertex.h"
-namespace WSYEngine {
+namespace SlithEngine {
 	class Mesh
 	{
 	private:
@@ -12,10 +12,10 @@ namespace WSYEngine {
 
 		int BindMesh();
 	public:
-		Mesh(const std::vector<WSYEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer);
+		Mesh(const std::vector<SlithEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer);
 		GLuint getMeshID() const;
 		int getNumberOfTriangles() const;
-		std::vector<WSYEngine::Vertex> m_vertexBuffer;
+		std::vector<SlithEngine::Vertex> m_vertexBuffer;
 		std::vector<GLuint> m_triangleBuffer;
 		~Mesh();
 

@@ -1,6 +1,6 @@
 #include "Time.h"
 
-namespace WSYEngine {
+namespace SlithEngine {
 
 	Time::Time(){
 	}

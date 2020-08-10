@@ -119,7 +119,7 @@
     <ClInclude Include="vendor\dearIMGUI\imstb_truetype.h">
       <Filter>DearImGui\header</Filter>
     </ClInclude>
-    <ClInclude Include="WSYEngineEnums.h">
+    <ClInclude Include="SlithEngineEnum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

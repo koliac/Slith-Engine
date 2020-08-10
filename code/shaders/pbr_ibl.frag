@@ -25,9 +25,6 @@ uniform vec3 camPos;
 const float PI = 3.14159265359;
 // ----------------------------------------------------------------------------
 // Easy trick to get tangent-normals to world-space to keep PBR code simplified.
-// Don't worry if you don't get what's going on; you generally want to do normal 
-// mapping the usual way for performance anways; I do plan make a note of this 
-// technique somewhere later in the normal mapping tutorial.
 vec3 getNormalFromMap()
 {
     vec3 tangentNormal = texture(normalMap, TexCoords).xyz * 2.0 - 1.0;
@@ -131,8 +128,7 @@ void main()
          // kS is equal to Fresnel
         vec3 kS = F;
         // for energy conservation, the diffuse and specular light can't
-        // be above 1.0 (unless the surface emits light); to preserve this
-        // relationship the diffuse component (kD) should equal 1.0 - kS.
+        // be above 1.0 (unless the surface emits light)
         vec3 kD = vec3(1.0) - kS;
         // multiply kD by the inverse metalness such that only non-metals 
         // have diffuse lighting, or a linear blend if partly metal (pure metals
@@ -143,7 +139,7 @@ void main()
         float NdotL = max(dot(N, L), 0.0);        
 
         // add to outgoing radiance Lo
-        Lo += (kD * albedo / PI + specular) * radiance * NdotL; // note that we already multiplied the BRDF by the Fresnel (kS) so we won't multiply by kS again
+        Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }   
     
     // ambient lighting (we now use IBL as the ambient term)

@@ -2,17 +2,17 @@
 #include <tiny_obj_loader.h>
 #include <iostream>
 
-namespace WSYEngine {
-	void Model::processMesh(const aiScene *scene, const aiNode *root, std::vector<WSYEngine::Mesh*> &meshList) {
+namespace SlithEngine {
+	void Model::processMesh(const aiScene *scene, const aiNode *root, std::vector<SlithEngine::Mesh*> &meshList) {
 
 	for (size_t i = 0; i < root->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[root->mMeshes[i]];
-		std::vector<WSYEngine::Vertex> vList;
+		std::vector<SlithEngine::Vertex> vList;
 		std::vector<GLuint> triList;
 		for (size_t v = 0; v < mesh->mNumVertices; v++)
 		{
-			WSYEngine::Vertex vertex;
+			SlithEngine::Vertex vertex;
 			glm::vec3 position, normal, tangent;
 			glm::vec2 uv;
 			glm::vec4 vColor;
@@ -90,7 +90,7 @@ namespace WSYEngine {
 		}
 		std::cout << "Mesh " << meshList.size() << " vertex count: " << vList.size() << std::endl;
 		std::cout << "Mesh " << meshList.size() << " triangle count: " << triList.size() << std::endl;
-		WSYEngine::Mesh* m = new WSYEngine::Mesh(vList, triList);
+		SlithEngine::Mesh* m = new SlithEngine::Mesh(vList, triList);
 		meshList.push_back(m);
 		
 	}

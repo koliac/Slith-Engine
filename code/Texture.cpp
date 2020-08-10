@@ -2,7 +2,7 @@
 #include <stb_image.h>
 #include <glad/glad.h>
 #include<iostream>
-namespace WSYEngine {
+namespace SlithEngine {
 	
 	Texture::Texture(std::string &texturePath, bool isHDR)
 	{

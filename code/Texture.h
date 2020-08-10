@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-namespace WSYEngine {
+namespace SlithEngine {
 	class Texture
 	{
 		unsigned int m_textureID;

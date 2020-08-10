@@ -1,5 +1,5 @@
 #pragma once
-namespace WSYEngine {
+namespace SlithEngine {
 	class Time
 	{
 	public:

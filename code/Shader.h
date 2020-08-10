@@ -6,7 +6,7 @@
 #include <sstream>
 #include<iostream>
 #include<glm/glm.hpp>
-namespace WSYEngine {
+namespace SlithEngine {
 	class Shader
 	{
 	private:

@@ -41,8 +41,8 @@ float lastFrameTime = 0.0f;
 unsigned int quadVAO=0, quadVBO=0;
 
 // ImGUI Controlled variables
-WSYEngine::ShaderMode shaderMode{ WSYEngine::ShaderMode::PBRIBL};
-WSYEngine::BackgroundMode backgroudMode{ WSYEngine::BackgroundMode::IMAGE };
+SlithEngine::ShaderMode shaderMode{ SlithEngine::ShaderMode::PBRIBL};
+SlithEngine::BackgroundMode backgroudMode{ SlithEngine::BackgroundMode::IMAGE };
 bool isHDR{ true };
 int isACES{ 1 };
 
@@ -104,18 +104,18 @@ int main()
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
 	// -----------------------Camera Setup ------------------------------------------------------------
-	WSYEngine::Camera cam(window);
+	SlithEngine::Camera cam(window);
 	// -----------------------Shader Setup-------------------------------------------------------------
-	WSYEngine::Shader phongShader("Shaders/Phong.vert", "Shaders/Phong.frag");
-	WSYEngine::Shader skyboxShader("Shaders/skybox.vert", "Shaders/skybox.frag");
-	WSYEngine::Shader pbrShaderNoIBL("Shaders/PBR.vert", "Shaders/PBR.frag");
-	WSYEngine::Shader toneMappingShader("Shaders/HDRToneMapping.vert", "Shaders/HDRToneMapping.frag");
-	WSYEngine::Shader pbrIBLShader("Shaders/pbr_ibl.vert", "Shaders/pbr_ibl.frag");
-	WSYEngine::Shader equirectangularToCubemapShader("Shaders/cubemap.vert", "Shaders/equirectangular_to_cubemap.frag");
-	WSYEngine::Shader irradianceShader("Shaders/cubemap.vert", "Shaders/irradiance_convolution.frag");
-	WSYEngine::Shader prefilterShader("Shaders/cubemap.vert", "Shaders/prefilter.frag");
-	WSYEngine::Shader brdfShader("Shaders/brdf.vert", "Shaders/brdf.frag");
-	WSYEngine::Shader backgroundShader("Shaders/background.vert", "Shaders/background.frag");
+	SlithEngine::Shader phongShader("Shaders/Phong.vert", "Shaders/Phong.frag");
+	SlithEngine::Shader skyboxShader("Shaders/skybox.vert", "Shaders/skybox.frag");
+	SlithEngine::Shader pbrShaderNoIBL("Shaders/PBR.vert", "Shaders/PBR.frag");
+	SlithEngine::Shader toneMappingShader("Shaders/HDRToneMapping.vert", "Shaders/HDRToneMapping.frag");
+	SlithEngine::Shader pbrIBLShader("Shaders/pbr_ibl.vert", "Shaders/pbr_ibl.frag");
+	SlithEngine::Shader equirectangularToCubemapShader("Shaders/cubemap.vert", "Shaders/equirectangular_to_cubemap.frag");
+	SlithEngine::Shader irradianceShader("Shaders/cubemap.vert", "Shaders/irradiance_convolution.frag");
+	SlithEngine::Shader prefilterShader("Shaders/cubemap.vert", "Shaders/prefilter.frag");
+	SlithEngine::Shader brdfShader("Shaders/brdf.vert", "Shaders/brdf.frag");
+	SlithEngine::Shader backgroundShader("Shaders/background.vert", "Shaders/background.frag");
 	//WSYEngine::Shader lightShader("Shaders/light.vert", "Shaders/light.frag");
 	// --------------------------- Skybox--------------------------------------------------------
 	float skyboxVertices[] = {
@@ -195,7 +195,7 @@ int main()
 
 	// -----------------------------Mesh Loading test - will abstract away later-----------------
 	std::string inputfile = "../Models/MechModel.dae";
-	WSYEngine::Model testMesh(inputfile);
+	SlithEngine::Model testMesh(inputfile);
 
 	std::string diffuseTexture = "../textures/MechTextures/default_albedo.jpg";
 	std::string normalTexture = "../textures/MechTextures/default_normal.jpg";
@@ -203,11 +203,11 @@ int main()
 	std::string aoTexture = "../textures/MechTextures/default_AO.jpg";
 	std::string metallicTexture = "../textures/MechTextures/default_metallic.jpg";
 
-	WSYEngine::Texture dTex(diffuseTexture);
-	WSYEngine::Texture nTex(normalTexture);
-	WSYEngine::Texture rTex(roughnessTexture);
-	WSYEngine::Texture aoTex(aoTexture);
-	WSYEngine::Texture mTex(metallicTexture);
+	SlithEngine::Texture dTex(diffuseTexture);
+	SlithEngine::Texture nTex(normalTexture);
+	SlithEngine::Texture rTex(roughnessTexture);
+	SlithEngine::Texture aoTex(aoTexture);
+	SlithEngine::Texture mTex(metallicTexture);
 
 
 	glm::mat4 model = glm::mat4(1.0f);
@@ -525,7 +525,7 @@ int main()
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// -----------------------------------------------------------------------------------------------------------------
-	std::vector<WSYEngine::Mesh*> meshes = testMesh.getMeshList();
+	std::vector<SlithEngine::Mesh*> meshes = testMesh.getMeshList();
 	// render loop
 	// -----------
 	int scrWidth, scrHeight;
@@ -541,8 +541,8 @@ int main()
 		ImGui::NewFrame();
 		// setup ImGUI
 		ImGui::Begin("Shader Mode");
-		ImGui::RadioButton("Phong", (int*)&shaderMode, WSYEngine::ShaderMode::PHONG); ImGui::SameLine();
-		ImGui::RadioButton("PBR IBL", (int*)&shaderMode, WSYEngine::ShaderMode::PBRIBL); ImGui::SameLine();
+		ImGui::RadioButton("Phong", (int*)&shaderMode, SlithEngine::ShaderMode::PHONG); ImGui::SameLine();
+		ImGui::RadioButton("PBR IBL", (int*)&shaderMode, SlithEngine::ShaderMode::PBRIBL); ImGui::SameLine();
 		ImGui::End();
 		ImGui::Begin("Lightings");
 		ImGui::Checkbox("HDR", &isHDR);
@@ -550,16 +550,16 @@ int main()
 			ImGui::RadioButton("ACES", &isACES, 1); ImGui::SameLine();
 			ImGui::RadioButton("Reinhard", &isACES, 0);
 		}
-		ImGui::RadioButton("Image", (int*)&backgroudMode, WSYEngine::BackgroundMode::IMAGE); ImGui::SameLine();
-		ImGui::RadioButton("Light Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::LIGHTMAP); ImGui::SameLine();
-		ImGui::RadioButton("Specular Prefiltered Map", (int*)&backgroudMode, WSYEngine::BackgroundMode::PREFILTER); ImGui::SameLine();
+		ImGui::RadioButton("Image", (int*)&backgroudMode, SlithEngine::BackgroundMode::IMAGE); ImGui::SameLine();
+		ImGui::RadioButton("Light Map", (int*)&backgroudMode, SlithEngine::BackgroundMode::LIGHTMAP); ImGui::SameLine();
+		ImGui::RadioButton("Specular Prefiltered Map", (int*)&backgroudMode, SlithEngine::BackgroundMode::PREFILTER); ImGui::SameLine();
 		ImGui::End();
 		// render ImGUI
 		ImGui::Render();
 		// main-loop time logic
-		WSYEngine::Time::time = glfwGetTime();
-		WSYEngine::Time::deltaTime = WSYEngine::Time::time - lastFrameTime;
-		lastFrameTime = WSYEngine::Time::time;
+		SlithEngine::Time::time = glfwGetTime();
+		SlithEngine::Time::deltaTime = SlithEngine::Time::time - lastFrameTime;
+		lastFrameTime = SlithEngine::Time::time;
 
 
 		// input
@@ -580,13 +580,13 @@ int main()
 		glm::mat4 view = cam.getViewMatrix();
 		glm::mat4 skyBoxView = glm::mat4(glm::mat3(view));
 		glm::mat4 projection = cam.getPerspectiveMatrix();
-		if (shaderMode == WSYEngine::ShaderMode::PHONG) {
+		if (shaderMode == SlithEngine::ShaderMode::PHONG) {
 			// ----------------Phong 
 			phongShader.bind();
 			phongShader.setMat4("projection", projection);
 			phongShader.setMat4("view", view);
 		}
-		else if (shaderMode == WSYEngine::ShaderMode::PBRIBL)
+		else if (shaderMode == SlithEngine::ShaderMode::PBRIBL)
 		{
 			// ----------------PBR
 			//pbrShaderNoIBL.bind();
@@ -623,11 +623,11 @@ int main()
 			glBindVertexArray(meshes[m]->getMeshID());
 			glDrawElements(GL_TRIANGLES, meshes[m]->getNumberOfTriangles(), GL_UNSIGNED_INT, 0);
 		}
-		if (shaderMode == WSYEngine::ShaderMode::PHONG) {
+		if (shaderMode == SlithEngine::ShaderMode::PHONG) {
 
 			phongShader.unbind();
 		}
-		else if (shaderMode == WSYEngine::ShaderMode::PBRIBL)
+		else if (shaderMode == SlithEngine::ShaderMode::PBRIBL)
 		{
 			pbrIBLShader.unbind();
 		}
@@ -641,13 +641,13 @@ int main()
 		backgroundShader.setMat4("projection", projection);
 		glBindVertexArray(skyboxVAO);
 		glActiveTexture(GL_TEXTURE0);
-		if (backgroudMode == WSYEngine::BackgroundMode::IMAGE) {
+		if (backgroudMode == SlithEngine::BackgroundMode::IMAGE) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
 		}
-		else if (backgroudMode == WSYEngine::BackgroundMode::LIGHTMAP) {
+		else if (backgroudMode == SlithEngine::BackgroundMode::LIGHTMAP) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceMap);
 		}
-		else if (backgroudMode == WSYEngine::BackgroundMode::PREFILTER) {
+		else if (backgroudMode == SlithEngine::BackgroundMode::PREFILTER) {
 			glBindTexture(GL_TEXTURE_CUBE_MAP, prefilterMap);
 		}
 		glDrawArrays(GL_TRIANGLES, 0, 36);
