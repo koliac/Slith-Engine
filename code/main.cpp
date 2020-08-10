@@ -18,7 +18,7 @@
 #include "Model.h"
 #include "Time.h"
 #include "Camera.h"
-#include "WSYEngineEnums.h"
+#include "SlithEngineEnum.h"
 
 #include <stb_image.h>
 #include <glm/glm.hpp>
@@ -62,7 +62,7 @@ int main()
 
 	// glfw window creation
 	// --------------------
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "580 Final Project - PBR Renderer", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Slith Engine", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;

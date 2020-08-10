@@ -23,6 +23,7 @@
     <ProjectGuid>{02D701B5-8AB3-4B6C-AF34-E92BA150EADA}</ProjectGuid>
     <RootNamespace>PBRDemo</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>SlithEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -186,7 +187,7 @@
     <None Include="shaders\Phong.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="PBR_Demo.rc" />
+    <ResourceCompile Include="SlithEngine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
