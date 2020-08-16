@@ -25,6 +25,9 @@
     <Filter Include="DearImGui\header">
       <UniqueIdentifier>{3f4724fd-b4dd-43fd-b458-3c9c5b0e500b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{6e181ed4-ac16-4780-b5de-af7eba937767}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="glad.c">
@@ -68,6 +71,12 @@
     </ClCompile>
     <ClCompile Include="vendor\dearIMGUI\imgui_widgets.cpp">
       <Filter>DearImGui\source</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,6 +129,18 @@
       <Filter>DearImGui\header</Filter>
     </ClInclude>
     <ClInclude Include="SlithEngineEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="core.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SlithEngine.h">
+      <Filter>Source Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
