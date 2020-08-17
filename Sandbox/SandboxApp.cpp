@@ -13,8 +13,8 @@ public:
 	}
 };
 
-int main() {
-	SandboxApp* app = new SandboxApp();
-	app->Run();
-	delete app;
+SlithEngine::Application* SlithEngine::CreateApplication()
+{
+	return new SandboxApp();
 }
+

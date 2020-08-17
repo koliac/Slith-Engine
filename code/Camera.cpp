@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include <iostream>
-#include "Time.h"
+#include "SE_Time.h"
 namespace SlithEngine {
 	float Camera::SCROLL_OFFSET = 0.0f;
 	bool Camera::NEED_UPDATE = false;

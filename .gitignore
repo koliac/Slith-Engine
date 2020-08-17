@@ -331,3 +331,4 @@ ASALocalRun/
 
 # imgui settings
 imgui.ini
+external/libs/spdlogd.lib

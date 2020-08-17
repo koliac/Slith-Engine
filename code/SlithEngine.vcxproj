@@ -54,9 +54,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <ConformanceMode>true</ConformanceMode>
+      <ConformanceMode>false</ConformanceMode>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glfw3.3_win10x86.lib;assimpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -71,7 +71,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)vendor\spdlog\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -83,13 +83,13 @@
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Test.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Time.cpp" />
+    <ClCompile Include="SE_Time.cpp" />
     <ClCompile Include="vendor\dearIMGUI\imgui.cpp" />
     <ClCompile Include="vendor\dearIMGUI\imgui_demo.cpp" />
     <ClCompile Include="vendor\dearIMGUI\imgui_draw.cpp" />
@@ -100,15 +100,16 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="core.h" />
+    <ClInclude Include="SlithCore.h" />
+    <ClInclude Include="EntryPoint.h" />
+    <ClInclude Include="Log.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SlithEngine.h" />
-    <ClInclude Include="Test.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Time.h" />
+    <ClInclude Include="SE_Time.h" />
     <ClInclude Include="vendor\dearIMGUI\imconfig.h" />
     <ClInclude Include="vendor\dearIMGUI\imgui.h" />
     <ClInclude Include="vendor\dearIMGUI\imgui_impl_glfw.h" />

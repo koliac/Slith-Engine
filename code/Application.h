@@ -1,5 +1,5 @@
 #pragma once
-#include "core.h"
+#include "SlithCore.h"
 namespace SlithEngine {
 
 
@@ -11,6 +11,9 @@ namespace SlithEngine {
 
 		void Run();
 	};
+
+	//define in client
+	Application* CreateApplication();
 
 
 }
