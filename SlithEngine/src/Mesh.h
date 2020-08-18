@@ -1,9 +1,10 @@
 #pragma once
+#include  "SE_Core.h"
 #include <vector>
 #include <glad/glad.h> 
 #include "vertex.h"
 namespace SlithEngine {
-	class Mesh
+	class SLITH_API Mesh
 	{
 	private:
 		GLuint m_VAO, m_VBO, m_EBO;

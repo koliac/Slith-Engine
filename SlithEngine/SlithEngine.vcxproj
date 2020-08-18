@@ -156,9 +156,9 @@
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
+    <ClInclude Include="src\SE_Core.h" />
     <ClInclude Include="src\SE_Time.h" />
     <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\SlithCore.h" />
     <ClInclude Include="src\SlithEngine.h" />
     <ClInclude Include="src\SlithEngineEnum.h" />
     <ClInclude Include="src\Texture.h" />

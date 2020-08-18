@@ -1,6 +1,7 @@
 #pragma once
+#include  "SE_Core.h"
 namespace SlithEngine {
-	class Time
+	class SLITH_API Time
 	{
 	public:
 		Time();

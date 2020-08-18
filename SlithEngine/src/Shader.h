@@ -1,4 +1,5 @@
 #pragma once
+#include  "SE_Core.h"
 #include<glad/glad.h>
 #include<string>
 #include<unordered_map>
@@ -7,7 +8,7 @@
 #include<iostream>
 #include<glm/glm.hpp>
 namespace SlithEngine {
-	class Shader
+	class SLITH_API Shader
 	{
 	private:
 		GLuint m_ID;

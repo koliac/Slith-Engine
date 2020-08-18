@@ -1,11 +1,12 @@
 #pragma once
+#include "SE_Core.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace SlithEngine {
-	class Camera
+	class SLITH_API Camera
 	{
 	private:
 		// default settings

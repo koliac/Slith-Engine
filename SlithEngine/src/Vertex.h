@@ -1,7 +1,8 @@
 #pragma once
+#include  "SE_Core.h"
 #include<glm/glm.hpp>
 namespace SlithEngine{
-	struct Vertex {
+	struct SLITH_API Vertex {
 		glm::vec3 position;
 		glm::vec3 normal;
 		glm::vec2 texcoord;

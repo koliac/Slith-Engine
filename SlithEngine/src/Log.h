@@ -1,5 +1,5 @@
 #pragma once
-#include  "SlithCore.h"
+#include  "SE_Core.h"
 //#ifndef FMT_DEPRECATED
 //	#define FMT_DEPRECATED
 //#endif

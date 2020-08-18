@@ -1,4 +1,5 @@
 #pragma once
+#include  "SE_Core.h"
 #include <string>
 #include <vector>
 #include "Mesh.h"
@@ -6,7 +7,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 namespace SlithEngine {
-	class Model
+	class SLITH_API Model
 	{
 	private:
 		std::vector<Mesh*> m_MeshList;
