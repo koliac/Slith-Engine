@@ -5,5 +5,5 @@ This was originally developed for a class final project and later its functional
 Click [here](https://www.youtube.com/watch?v=cgzsSXj566A) to view a video capture of the project.
 
 ---
-Currently, this project is under major construction, so if you pull the latest, nothing will actually showup. The last displayable commit is **f37957f75552476328550a6b327aa72a05909020**
+Currently, this project is under major construction, so if you pull the latest, nothing will actually showup. The last displayable commit is __f37957f75552476328550a6b327aa72a05909020__
 ---
