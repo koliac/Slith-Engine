@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SlithEngine", "SlithEngine\SlithEngine.vcxproj", "{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Dist|Win32 = Dist|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Debug|Win32.Build.0 = Debug|Win32
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Dist|Win32.ActiveCfg = Dist|Win32
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Dist|Win32.Build.0 = Dist|Win32
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Release|Win32.ActiveCfg = Release|Win32
+		{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}.Release|Win32.Build.0 = Release|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Debug|Win32.Build.0 = Debug|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Dist|Win32.ActiveCfg = Dist|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Dist|Win32.Build.0 = Dist|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Release|Win32.ActiveCfg = Release|Win32
+		{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
