@@ -1,6 +1,5 @@
 #pragma once
 #include  "SE_Core.h"
-#include <vector>
 #include <glad/glad.h> 
 #include "vertex.h"
 namespace SlithEngine {

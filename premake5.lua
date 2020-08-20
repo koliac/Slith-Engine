@@ -11,7 +11,11 @@ workspace "SlithEngine"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
--- Include directories relative to root folder (solution directory)
+group "Dependencies"
+	include "SlithEngine/vendor/dearIMGUI"
+	include "SlithEngine/vendor/GLAD"
+group ""
+
 
 project "SlithEngine"
 	location "SlithEngine"
@@ -23,18 +27,24 @@ project "SlithEngine"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 
+	pchheader "se_pch.h"
+	pchsource "SlithEngine/src/se_pch.cpp"
+
 	files
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/src/**.c"
-
+		"%{prj.name}/src/**.c",
+		"shaders/**.frag",
+		"shaders/**.vert"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/includes"
+		"%{prj.name}/includes",
+		"%{prj.name}/vendor/dearIMGUI",
+		"%{prj.name}/vendor/GLAD/include"
 	}
 
 	libdirs
@@ -47,7 +57,9 @@ project "SlithEngine"
 		"assimp-vc140-mt.lib",
 		"assimpd.lib",
 		"glfw3.lib",
-		"opengl32.lib"
+		"opengl32.lib",
+		"ImGui",
+		"Glad"
 	}
 
 
@@ -100,12 +112,23 @@ project "Sandbox"
 	includedirs
 	{
 		"SlithEngine/vendor/spdlog/include",
-		"SlithEngine/src"
+		"SlithEngine/src",
+		"SlithEngine/includes",
+		"SlithEngine/vendor/dearIMGUI",
+		"SlithEngine/vendor/GLAD/include"
+	}
+
+	libdirs
+	{
+		"SlithEngine/libs"
 	}
 
 	links
 	{
-		"SlithEngine"
+		"SlithEngine",
+		"assimpd.lib",
+		"glfw3.lib",
+		"opengl32.lib"
 	}
 
 	filter "system:windows"

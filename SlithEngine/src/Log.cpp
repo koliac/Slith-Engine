@@ -1,3 +1,4 @@
+#include "se_pch.h"
 #include "Log.h"
 
 namespace SlithEngine {

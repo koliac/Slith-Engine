@@ -1,6 +1,5 @@
 #pragma once
 #include  "SE_Core.h"
-#include <string>
 namespace SlithEngine {
 	class SLITH_API Texture
 	{

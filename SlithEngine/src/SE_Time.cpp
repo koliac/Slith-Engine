@@ -1,3 +1,4 @@
+#include "se_pch.h"
 #include "SE_Time.h"
 
 namespace SlithEngine {

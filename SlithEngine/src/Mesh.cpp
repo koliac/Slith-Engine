@@ -1,3 +1,4 @@
+#include "se_pch.h"
 #include "Mesh.h"
 namespace SlithEngine {
 	Mesh::Mesh(const std::vector<SlithEngine::Vertex>& vertexBuffer, const std::vector<GLuint>& triangleBuffer) :

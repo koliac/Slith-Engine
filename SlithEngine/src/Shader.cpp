@@ -1,3 +1,4 @@
+#include "se_pch.h"
 #include "Shader.h"
 
 namespace SlithEngine {
@@ -9,6 +10,7 @@ namespace SlithEngine {
 		std::string fragmentCode;
 		std::ifstream vShaderFile;
 		std::ifstream fShaderFile;
+
 		// ensure ifstream objects can throw exceptions:
 		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -36,6 +38,7 @@ namespace SlithEngine {
 		}
 		const char* vShaderCode = vertexCode.c_str();
 		const char * fShaderCode = fragmentCode.c_str();
+
 		// 2. compile shaders
 		unsigned int vertex, fragment;
 		GLint success;

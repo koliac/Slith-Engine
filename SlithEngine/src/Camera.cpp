@@ -1,5 +1,5 @@
+#include "se_pch.h"
 #include "Camera.h"
-#include <iostream>
 #include "SE_Time.h"
 namespace SlithEngine {
 	float Camera::SCROLL_OFFSET = 0.0f;

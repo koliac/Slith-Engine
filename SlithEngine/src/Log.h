@@ -1,11 +1,7 @@
 #pragma once
+
 #include  "SE_Core.h"
-//#ifndef FMT_DEPRECATED
-//	#define FMT_DEPRECATED
-//#endif
 #include "spdlog/spdlog.h"
-//#include "spdlog/sinks/stdout_color_sinks.h"
-#include <memory>
 namespace SlithEngine {
 	class SLITH_API Log
 	{

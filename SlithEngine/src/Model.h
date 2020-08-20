@@ -1,7 +1,5 @@
 #pragma once
 #include  "SE_Core.h"
-#include <string>
-#include <vector>
 #include "Mesh.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>

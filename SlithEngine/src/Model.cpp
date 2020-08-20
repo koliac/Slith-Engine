@@ -1,6 +1,6 @@
+#include "se_pch.h"
 #include "Model.h"
 #include <tiny_obj_loader.h>
-#include <iostream>
 
 namespace SlithEngine {
 	void Model::processMesh(const aiScene *scene, const aiNode *root, std::vector<SlithEngine::Mesh*> &meshList) {

@@ -1,6 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
+#include "se_pch.h"
 #include "Application.h"
 
 namespace SlithEngine {
@@ -8,6 +6,7 @@ namespace SlithEngine {
 
 	Application::Application()
 	{
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 
@@ -18,6 +17,8 @@ namespace SlithEngine {
 	void Application::Run()
 	{
 		std::cout << "Starting the Sandbox" << std::endl;
-		while (1);
+		while (true) {
+			m_Window->OnUpdate();
+		}
 	}
 }

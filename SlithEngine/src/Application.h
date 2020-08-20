@@ -1,5 +1,6 @@
 #pragma once
 #include "SE_Core.h"
+#include "Window.h"
 namespace SlithEngine {
 
 
@@ -10,6 +11,8 @@ namespace SlithEngine {
 		virtual ~Application();
 
 		void Run();
+	private:
+		std::unique_ptr<Window> m_Window;
 	};
 
 	//define in client

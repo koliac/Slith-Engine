@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="SlithEngine">
+      <UniqueIdentifier>{BF066AA0-2BBC-E295-B4B0-DC6C2065D999}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SlithEngine\vendor">
+      <UniqueIdentifier>{3CB0D8D1-2894-9927-91F4-937A7DF783A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SlithEngine\vendor\dearIMGUI">
+      <UniqueIdentifier>{827DC6AC-6E38-B658-17F0-2EA3038A00E9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\SandboxApp.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

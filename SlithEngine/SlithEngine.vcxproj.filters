@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{0F45D591-7B24-542D-843C-DF03F09ABA8E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Event">
+      <UniqueIdentifier>{3E1ADFB2-AA84-9329-F3C2-44CF5F6C717E}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Camera.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\EntryPoint.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Event\Event.h">
+      <Filter>src\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Log.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Model.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SE_Core.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SE_Time.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SlithEngine.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SlithEngineEnum.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Vertex.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Window.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\WindowsWindow.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\se_pch.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Camera.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Model.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SE_Time.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Window.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WindowsWindow.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\se_pch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\HDRToneMapping.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\HDRToneMapping.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\PBR.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\PBR.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\Phong.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\Phong.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\background.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\background.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\brdf.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\brdf.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\cubemap.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\equirectangular_to_cubemap.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\irradiance_convolution.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\light.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\light.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\pbr_ibl.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\pbr_ibl.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\prefilter.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\skybox.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="..\shaders\skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>

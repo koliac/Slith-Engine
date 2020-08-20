@@ -1,11 +1,6 @@
 #pragma once
 #include  "SE_Core.h"
 #include<glad/glad.h>
-#include<string>
-#include<unordered_map>
-#include <fstream>
-#include <sstream>
-#include<iostream>
 #include<glm/glm.hpp>
 namespace SlithEngine {
 	class SLITH_API Shader

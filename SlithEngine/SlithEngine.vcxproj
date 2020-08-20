@@ -77,10 +77,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>se_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;vendor\dearIMGUI;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -99,10 +100,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>se_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;vendor\dearIMGUI;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -125,10 +127,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|Win32'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>se_pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>SE_PLATFORM_WINDOWS;SE_BUILD_DLL;SE_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;includes;vendor\dearIMGUI;vendor\GLAD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -153,6 +156,7 @@
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\EntryPoint.h" />
+    <ClInclude Include="src\Event\Event.h" />
     <ClInclude Include="src\Log.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\Model.h" />
@@ -163,6 +167,9 @@
     <ClInclude Include="src\SlithEngineEnum.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Vertex.h" />
+    <ClInclude Include="src\Window.h" />
+    <ClInclude Include="src\WindowsWindow.h" />
+    <ClInclude Include="src\se_pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
@@ -173,8 +180,42 @@
     <ClCompile Include="src\SE_Time.cpp" />
     <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\Window.cpp" />
+    <ClCompile Include="src\WindowsWindow.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\se_pch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\shaders\HDRToneMapping.frag" />
+    <None Include="..\shaders\HDRToneMapping.vert" />
+    <None Include="..\shaders\PBR.frag" />
+    <None Include="..\shaders\PBR.vert" />
+    <None Include="..\shaders\Phong.frag" />
+    <None Include="..\shaders\Phong.vert" />
+    <None Include="..\shaders\background.frag" />
+    <None Include="..\shaders\background.vert" />
+    <None Include="..\shaders\brdf.frag" />
+    <None Include="..\shaders\brdf.vert" />
+    <None Include="..\shaders\cubemap.vert" />
+    <None Include="..\shaders\equirectangular_to_cubemap.frag" />
+    <None Include="..\shaders\irradiance_convolution.frag" />
+    <None Include="..\shaders\light.frag" />
+    <None Include="..\shaders\light.vert" />
+    <None Include="..\shaders\pbr_ibl.frag" />
+    <None Include="..\shaders\pbr_ibl.vert" />
+    <None Include="..\shaders\prefilter.frag" />
+    <None Include="..\shaders\skybox.frag" />
+    <None Include="..\shaders\skybox.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="vendor\dearIMGUI\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="vendor\GLAD\Glad.vcxproj">
+      <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
